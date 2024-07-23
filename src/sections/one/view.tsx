@@ -6,6 +6,9 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
 import { useSettingsContext } from 'src/components/settings';
+import { useContext } from 'react';
+import { AuthContext } from 'src/auth/context/jwt';
+import { useAuthContext } from 'src/auth/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +18,6 @@ export default function OneView() {
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Typography variant="h4"> Page One </Typography>
-
       <Box
         sx={{
           mt: 5,
