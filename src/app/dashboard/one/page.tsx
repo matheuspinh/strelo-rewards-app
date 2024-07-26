@@ -1,11 +1,12 @@
-import OneView from 'src/sections/one/view';
+import SortingSelectingTable from 'src/sections/users/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: One',
+  title: 'Dashboard: Users',
 };
 
 export default function Page() {
-  return <OneView />;
+  return <SortingSelectingTable />;
+  
 }
