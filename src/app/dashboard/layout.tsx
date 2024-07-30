@@ -3,6 +3,7 @@
 import { AuthGuard, RoleBasedGuard } from 'src/auth/guard';
 import DashboardLayout from 'src/layouts/dashboard';
 import { UsersProvider } from '../contexts/users/users-provider';
+import { MissionsProvider } from '../contexts/missions/missions-provider';
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +16,9 @@ export default function Layout({ children }: Props) {
     <AuthGuard>
       <RoleBasedGuard>
         <UsersProvider>
-          <DashboardLayout>{children}</DashboardLayout>
+          <MissionsProvider>
+            <DashboardLayout>{children}</DashboardLayout>
+          </MissionsProvider>
         </UsersProvider>
       </RoleBasedGuard>
     </AuthGuard>
