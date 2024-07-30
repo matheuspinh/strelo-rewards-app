@@ -1,18 +1,17 @@
 'use client';
 
-import Box from '@mui/material/Box';
-import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
 import * as Yup from 'yup';
-
-import { useSettingsContext } from 'src/components/settings';
-import { RHFUploadAvatar } from 'src/components/hook-form/rhf-upload';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useCallback } from 'react';
-import FormProvider from 'src/components/hook-form/form-provider';
+
 import { Button } from '@mui/material';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+
+import { useSettingsContext } from 'src/components/settings';
+import FormProvider from 'src/components/hook-form/form-provider';
+import { RHFUploadAvatar } from 'src/components/hook-form/rhf-upload';
 
 // ----------------------------------------------------------------------
 
@@ -44,9 +43,7 @@ export default function OneView() {
     [setValue]
   );
 
-  const onSubmit = handleSubmit(async(data) => {
-    return console.log(data);
-  })
+  const onSubmit = handleSubmit(async(data) => console.log(data))
 
 
   return (

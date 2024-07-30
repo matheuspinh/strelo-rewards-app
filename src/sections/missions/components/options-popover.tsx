@@ -1,14 +1,19 @@
-import { Box, IconButton, MenuItem, Stack, Typography } from "@mui/material";
 import { m } from "framer-motion";
+
+import { Close } from "@mui/icons-material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Box, Stack, MenuItem, IconButton } from "@mui/material";
+
+import { useRouter } from "src/routes/hooks";
+
+import { useBoolean } from "src/hooks/use-boolean";
+import { useMissionsContext } from "src/hooks/use-missions-context";
+
+import { Mission } from "src/app/contexts/missions/types";
+
 import { varHover } from "src/components/animate";
 import { usePopover } from "src/components/custom-popover";
-import { useRouter } from "src/routes/hooks";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CustomPopover from "src/components/custom-popover/custom-popover";
-import { useBoolean } from "src/hooks/use-boolean";
-import { Close } from "@mui/icons-material";
-import { Mission } from "src/app/contexts/missions/types";
-import { useMissionsContext } from "src/hooks/use-missions-context";
 
 const OPTIONS = [
   {
@@ -34,7 +39,7 @@ export default function OptionsPopover({mission}: {mission:Mission}) {
   const handleClosePopover = () => {
     popover.onClose()
     confirmDelete.onFalse()
-    return
+    
   }
 
   const handleEdit = () => {
@@ -83,8 +88,8 @@ export default function OptionsPopover({mission}: {mission:Mission}) {
               Confirmar Exclusão
               </Box>
               <Box 
-                display={'inline-flex'} 
-                alignItems={'center'} 
+                display="inline-flex" 
+                alignItems="center" 
                 sx={{
                   border: '1px solid', 
                   borderRadius: '5px', 
@@ -93,9 +98,12 @@ export default function OptionsPopover({mission}: {mission:Mission}) {
                   },
                   width: '22px'
                 }}
-                onClick={(e) => {e.stopPropagation, confirmDelete.onFalse()}}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  confirmDelete.onFalse()
+                }}
               >
-              <Close fontSize={"small"}  />
+              <Close fontSize="small"  />
             </Box>
           </MenuItem>) :
           (<MenuItem onClick={confirmDelete.onTrue}

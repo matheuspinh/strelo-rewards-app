@@ -1,24 +1,23 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Close, Label } from "@mui/icons-material";
-import { Avatar, Box, Button, Chip, Dialog, dialogClasses, IconButton, Input, InputAdornment, InputBase, Typography, useTheme } from "@mui/material";
-import { useCallback, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { User } from "src/app/contexts/users/types";
-import { RHFTextField } from "src/components/hook-form";
-import FormProvider from "src/components/hook-form/form-provider";
-import { RHFUpload, RHFUploadAvatar } from "src/components/hook-form/rhf-upload";
-import Iconify from "src/components/iconify";
-import { useBoolean } from "src/hooks/use-boolean";
-import { useUsersContext } from "src/hooks/use-users-context";
-import { useRouter, useSearchParams } from "next/navigation";
 import * as Yup from 'yup'
-import { useUser } from "src/hooks/use-user-detail";
+import { useForm } from "react-hook-form";
+import { useEffect, useCallback } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import { Close } from "@mui/icons-material";
+import { Box, Chip, Avatar, Button, Dialog, useTheme, Typography, dialogClasses } from "@mui/material";
+
+import { useBoolean } from "src/hooks/use-boolean";
 import { useResponsive } from "src/hooks/use-responsive";
-import Scrollbar from "src/components/scrollbar";
-import { RHFMultiSelect, RHFSelect } from "src/components/hook-form/rhf-select";
-import RHFAutocomplete from "src/components/hook-form/rhf-autocomplete";
-import { useMissionsContext } from "src/hooks/use-missions-context";
 import { useMission } from "src/hooks/use-mission-detail";
+import { useUsersContext } from "src/hooks/use-users-context";
+import { useMissionsContext } from "src/hooks/use-missions-context";
+
+import { RHFTextField } from "src/components/hook-form";
+import { RHFUpload } from "src/components/hook-form/rhf-upload";
+import FormProvider from "src/components/hook-form/form-provider";
+import { RHFMultiSelect } from "src/components/hook-form/rhf-select";
+import RHFAutocomplete from "src/components/hook-form/rhf-autocomplete";
 
 export const badgesMock = [
   { id: '1', name: 'Badge 1'},
@@ -44,7 +43,7 @@ export default function MissionFormModal() {
   const {data : userList, isLoading: isLoadingUser } = useUsersContext()
   const { registerMission, updateMission } = useMissionsContext();
 
-  const {data, isLoading, isError} = useMission(edit!);
+  const {data: missionData, isLoading, isError} = useMission(edit!);
 
   const badgeData = badgesMock.map(badge => ({label: badge.name, value: badge.id}))
 
@@ -70,24 +69,23 @@ export default function MissionFormModal() {
 
   const { setValue, handleSubmit, reset } = methods;
 
-  if(!isLoading && data){
-    setValue('title', data.title)
-    setValue('description', data.description) 
-    setValue('xp', data.xp)
-    setValue('gold', data.gold)
-    setValue('badges', data.badges)
-    setValue('participants', data.users.map(user => ({label: user.username, value: user.id, avatar: user.avatarUrl})))
+  if(!isLoading && missionData){
+    setValue('title', missionData.title)
+    setValue('description', missionData.description) 
+    setValue('xp', missionData.xp)
+    setValue('gold', missionData.gold)
+    setValue('badges', missionData.badges)
+    setValue('participants', missionData.users.map(user => ({label: user.username, value: user.id, avatar: user.avatarUrl})))
 
-    if (data.imageUrl){
+    if (missionData.imageUrl){
       const file = {
-        preview: data.imageUrl
+        preview: missionData.imageUrl
       }
       setValue('image', file, { shouldValidate: true })
     }
   }
 
   const onSubmit = handleSubmit(async(data) => {
-
     if(edit){
       try{
         const mappedParticipants = data.participants?.map((user) => user.value)
@@ -96,8 +94,12 @@ export default function MissionFormModal() {
         formData.append('title', data.title);
         formData.append('description', data.description);
         formData.append('xp', data.xp.toString());
-        data.gold && formData.append('gold', data.gold.toString());
-        data.badges && formData.append('badges', JSON.stringify(data.badges));
+        if(data.gold){
+          formData.append('gold', data.gold.toString())
+        }
+        if(data.badges){
+          formData.append('badges', JSON.stringify(data.badges))
+        }
         formData.append('participants', JSON.stringify(mappedParticipants));
         if(data.image && data.image instanceof File){
           formData.append('image', data.image);
@@ -106,7 +108,7 @@ export default function MissionFormModal() {
         router.push('/dashboard/missions/')
         return
       } catch (error) {
-
+        console.log(error)
       }
     }
     try{
@@ -115,8 +117,12 @@ export default function MissionFormModal() {
       formData.append('title', data.title);
       formData.append('description', data.description);
       formData.append('xp', data.xp.toString());
-      data.gold && formData.append('gold', data.gold.toString());
-      data.badges && formData.append('badges', JSON.stringify(data.badges));
+      if(data.gold){
+        formData.append('gold', data.gold.toString())
+      }
+      if(data.badges){
+        formData.append('badges', JSON.stringify(data.badges))
+      }
       formData.append('participants', JSON.stringify(data.participants?.map((user) => user.value)));
 
       if(data.image && data.image instanceof File){
@@ -125,9 +131,9 @@ export default function MissionFormModal() {
 
       await registerMission(formData);
       router.push('/dashboard/missions/')
-      return
-    } catch (error) {
       
+    } catch (error) {
+      console.log(error)
     }
   })
 
@@ -159,12 +165,14 @@ export default function MissionFormModal() {
 
   useEffect(() => {
     if(modal === 'open'){
-      !edit && reset()  
+      if(!edit){
+        reset()
+      }  
       open.onTrue()
     } else {
       open.onFalse()
     }
-    }, [modal])
+    }, [modal, edit, open, reset])
 
   const renderButton = (
     <Button onClick={handleOpenModal} variant="outlined" color='primary'>Nova Missão</Button>
@@ -194,17 +202,17 @@ export default function MissionFormModal() {
         },
       }}>
         
-          <Box padding={'2rem 1.2rem'} overflow={'auto'} sx={{scrollbarWidth:'none'}}>
-            <Box display={'flex'}  marginBottom={'3rem'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
+          <Box padding="2rem 1.2rem" overflow="auto" sx={{scrollbarWidth:'none'}}>
+            <Box display="flex"  marginBottom="3rem" flexDirection="row" alignItems="center" justifyContent="space-between">
               <Typography  variant="h4">Nova Missão</Typography>
-              <Close fontSize={"large"} onClick={handleClose} />
+              <Close fontSize="large" onClick={handleClose} />
             </Box>
             <FormProvider methods={methods} onSubmit={onSubmit}>
-            <Box display={'flex'} flexDirection={isMobile ? 'column' : 'row'} gap={'2.5rem'}>
-              <Box width={isMobile ? '21rem' : '30rem'} height={'20rem'} padding={'0'}>
+            <Box display="flex" flexDirection={isMobile ? 'column' : 'row'} gap="2.5rem">
+              <Box width={isMobile ? '21rem' : '30rem'} height="20rem" padding="0">
                 <RHFUpload  name='image' onDrop={handleDrop} sx={{height: '20rem'}}/>
               </Box>
-                <Box display={'flex'} width={isMobile ? '21rem' : '30rem'} flexDirection={'column'} gap={'1rem'}>
+                <Box display="flex" width={isMobile ? '21rem' : '30rem'} flexDirection="column" gap="1rem">
                     <RHFTextField name='title' label='Título'/>
                     <RHFTextField name='description' label='Descrição' multiline rows={3}/>
                     <Typography variant='subtitle2'>Recompensa</Typography>
@@ -222,7 +230,7 @@ export default function MissionFormModal() {
                         options={userList.users.map(user => ({label: user.username, value: user.id, avatar: user.avatarUrl}))}
                         renderOption={(props, option) => (                          
                             <li {...props}>
-                              <Box  display={'flex'} flexDirection={'row'} alignItems={'center'} gap={'1rem'}>
+                              <Box  display="flex" flexDirection="row" alignItems="center" gap="1rem">
                                 <Avatar sx={{ width: 24, height: 24 }} src={option.avatar} />
                                 <Typography variant='subtitle2'>{option.label}</Typography>
                               </Box>

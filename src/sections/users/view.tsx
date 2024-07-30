@@ -5,13 +5,18 @@ import { useState, useEffect } from 'react';
 import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
+import { Box, Avatar } from '@mui/material';
 import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
+
+import { useResponsive } from 'src/hooks/use-responsive';
+import { useUsersContext } from 'src/hooks/use-users-context';
+
+import { User } from 'src/app/contexts/users/types';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -23,24 +28,13 @@ import {
   TableHeadCustom,
   TableSelectedAction,
 } from 'src/components/table';
-import { Avatar, Box } from '@mui/material';
-import { useUsersContext } from 'src/hooks/use-users-context';
-import OptionsPopover from './components/options-popover';
-import { User } from 'src/app/contexts/users/types';
+
 import UserFormModal from './components/user-form-modal';
-import { useResponsive } from 'src/hooks/use-responsive';
+import OptionsPopover from './components/options-popover';
 
 // ----------------------------------------------------------------------
 
 type RowDataType = User;
-
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Usuário e ID', align: 'left' },
-  { id: 'gold', label: 'Moedas', align: 'right' },
-  { id: 'xp', label: 'Experiência', align: 'right' },
-  { id: 'id',  label: '', align: 'right' }, 
-]
 
 // ----------------------------------------------------------------------
 
@@ -67,7 +61,9 @@ export default function UserView() {
   const [tableData, setTableData] = useState<RowDataType[]>([]);
 
   useEffect(() => {
-    !isLoading && setTableData(data.users);
+    if(!isLoading ){
+      setTableData(data.users);
+    } 
   }, [isLoading, data]);
 
 
@@ -77,9 +73,9 @@ export default function UserView() {
   });
 
   return (
-    <Box marginTop={'1.625rem'} borderRadius={'1rem'} bgcolor={'background.default'}>
-      <Stack  direction="row" alignItems="center" gap={'0.625rem'} sx={{ p: 3 }}>
-        <Typography padding={'0 15px'} variant="h6">Usuários ({!isLoading && data.userCount})</Typography>
+    <Box marginTop="1.625rem" borderRadius="1rem" bgcolor="background.default">
+      <Stack  direction="row" alignItems="center" gap="0.625rem" sx={{ p: 3 }}>
+        <Typography padding="0 15px" variant="h6">Usuários ({!isLoading && data.userCount})</Typography>
         <UserFormModal />
       </Stack>
 
@@ -103,7 +99,7 @@ export default function UserView() {
         />
 
         <Scrollbar>
-          <Table size={'medium'}>
+          <Table size="medium">
             <TableHeadCustom
               order={table.order}
               orderBy={table.orderBy}
@@ -127,8 +123,8 @@ export default function UserView() {
                     onClick={() => console.log('soon')}
                   >
                     <TableCell>
-                      <Box display={'flex'} flexDirection={'row'} alignItems={'center'} gap={'1rem'}>
-                        <Avatar src={row.avatarUrl}></Avatar>
+                      <Box display="flex" flexDirection="row" alignItems="center" gap="1rem">
+                        <Avatar src={row.avatarUrl} />
                         <Box> 
                           <Typography variant="subtitle2" noWrap>
                             {row.username}
