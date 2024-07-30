@@ -9,7 +9,7 @@ import { useSettingsContext } from 'src/components/settings';
 
 // ----------------------------------------------------------------------
 
-export default function ThreeView() {
+export default function BadgesView() {
   const settings = useSettingsContext();
 
   return (

@@ -1,11 +1,11 @@
-import ThreeView from 'src/sections/three/view';
+import BadgesView from 'src/sections/badges/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Three',
+  title: 'Dashboard: Conquistas',
 };
 
 export default function Page() {
-  return <ThreeView />;
+  return <BadgesView />;
 }
