@@ -138,7 +138,8 @@ export default function UserFormModal({user}: {user?: User}) {
     } else {
       open.onFalse()
     }
-    }, [modal, edit, open, reset])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [modal, edit, reset])
 
   const renderButton = (
     <Button onClick={handleOpenModal} variant="outlined" color='primary'>Novo Usuário</Button>

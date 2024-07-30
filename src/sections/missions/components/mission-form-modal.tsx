@@ -167,12 +167,13 @@ export default function MissionFormModal() {
     if(modal === 'open'){
       if(!edit){
         reset()
-      }  
-      open.onTrue()
+      }
+     open.onTrue()  
     } else {
       open.onFalse()
     }
-    }, [modal, edit, open, reset])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [modal, edit, reset])
 
   const renderButton = (
     <Button onClick={handleOpenModal} variant="outlined" color='primary'>Nova Missão</Button>

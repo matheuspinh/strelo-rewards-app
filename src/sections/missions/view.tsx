@@ -151,7 +151,7 @@ export default function MissionViews() {
                   <TableRow
                     hover
                     key={row.id}
-                    onClick={() => console.log('soon')}
+                    onClick={(e) => e.stopPropagation()}
                   >
                     <TableCell sx={{padding: '1rem'}}>
                       <Box display="flex" flexDirection="row" alignItems="center" gap="1rem">
