@@ -76,6 +76,7 @@ export default function DashboardLayout({ children }: Props) {
           display: 'flex',
           flexDirection: { xs: 'column', lg: 'row' },
         }}
+
       >
         {renderNavVertical}
 

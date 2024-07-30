@@ -11,6 +11,7 @@ import { MotionLazy } from 'src/components/animate/motion-lazy';
 import { SettingsDrawer, SettingsProvider } from 'src/components/settings';
 
 import { AuthProvider } from 'src/auth/context/jwt';
+import Providers from './providers';
 
 // ----------------------------------------------------------------------
 
@@ -39,30 +40,33 @@ type Props = {
   children: React.ReactNode;
 };
 
+
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={primaryFont.className}>
       <body>
-        <AuthProvider>
-          <SettingsProvider
-            defaultSettings={{
-              themeMode: 'light', // 'light' | 'dark'
-              themeDirection: 'ltr', //  'rtl' | 'ltr'
-              themeContrast: 'default', // 'default' | 'bold'
-              themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
-              themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
-              themeStretch: false,
-            }}
-          >
-            <ThemeProvider>
-              <MotionLazy>
-                <SettingsDrawer />
-                <ProgressBar />
-                {children}
-              </MotionLazy>
-            </ThemeProvider>
-          </SettingsProvider>
-        </AuthProvider>
+        <Providers>
+          <AuthProvider>
+            <SettingsProvider
+              defaultSettings={{
+                themeMode: 'light', // 'light' | 'dark'
+                themeDirection: 'ltr', //  'rtl' | 'ltr'
+                themeContrast: 'default', // 'default' | 'bold'
+                themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
+                themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
+                themeStretch: false,
+              }}
+            >
+              <ThemeProvider>
+                <MotionLazy>
+                  <SettingsDrawer />
+                  <ProgressBar />
+                  {children}
+                </MotionLazy>
+              </ThemeProvider>
+            </SettingsProvider>
+          </AuthProvider>
+        </Providers>
       </body>
     </html>
   );

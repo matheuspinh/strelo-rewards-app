@@ -52,8 +52,6 @@ export default function Header({ onOpenNav }: Props) {
         </IconButton>
       )}
 
-      <Searchbar />
-
       <Stack
         flexGrow={1}
         direction="row"
@@ -61,13 +59,6 @@ export default function Header({ onOpenNav }: Props) {
         justifyContent="flex-end"
         spacing={{ xs: 0.5, sm: 1 }}
       >
-        <LanguagePopover />
-
-        <NotificationsPopover />
-
-        <ContactsPopover />
-
-        <SettingsButton />
 
         <AccountPopover />
       </Stack>
@@ -77,11 +68,9 @@ export default function Header({ onOpenNav }: Props) {
   return (
     <AppBar
       sx={{
+        bgcolor: 'background.default',
         height: HEADER.H_MOBILE,
         zIndex: theme.zIndex.appBar + 1,
-        ...bgBlur({
-          color: theme.palette.background.default,
-        }),
         transition: theme.transitions.create(['height'], {
           duration: theme.transitions.duration.shorter,
         }),
@@ -102,6 +91,7 @@ export default function Header({ onOpenNav }: Props) {
           }),
         }),
       }}
+      
     >
       <Toolbar
         sx={{

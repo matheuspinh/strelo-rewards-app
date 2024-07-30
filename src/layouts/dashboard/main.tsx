@@ -34,6 +34,7 @@ export default function Main({ children, sx, ...other }: BoxProps) {
             pb: 15,
           }),
         }}
+        bgcolor={"#F9FAFB"}
       >
         {children}
       </Box>
@@ -60,6 +61,7 @@ export default function Main({ children, sx, ...other }: BoxProps) {
         ...sx,
       }}
       {...other}
+      bgcolor={"#F9FAFB"}
     >
       {children}
     </Box>

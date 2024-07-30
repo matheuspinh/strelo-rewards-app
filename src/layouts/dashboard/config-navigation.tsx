@@ -49,33 +49,16 @@ export function useNavData() {
       // OVERVIEW
       // ----------------------------------------------------------------------
       {
-        subheader: 'overview v5.7.0',
+        subheader: 'Overview',
         items: [
-          { title: 'one', path: paths.dashboard.root, icon: ICONS.dashboard },
-          { title: 'two', path: paths.dashboard.two, icon: ICONS.ecommerce },
+          { title: 'Usuários', path: paths.dashboard.root, icon: ICONS.dashboard },
+          { title: 'Missões', path: paths.dashboard.missions, icon: ICONS.ecommerce },
           {
-            title: 'three',
+            title: 'Conquistas',
             path: paths.dashboard.three,
             icon: ICONS.analytics,
           },
-        ],
-      },
-
-      // MANAGEMENT
-      // ----------------------------------------------------------------------
-      {
-        subheader: 'management',
-        items: [
-          {
-            title: 'user',
-            path: paths.dashboard.group.root,
-            icon: ICONS.user,
-            children: [
-              { title: 'four', path: paths.dashboard.group.root },
-              { title: 'five', path: paths.dashboard.group.five },
-              { title: 'six', path: paths.dashboard.group.six },
-            ],
-          },
+          { title: 'Privilégios', path: paths.dashboard.group.root, icon: ICONS.banking }
         ],
       },
     ],

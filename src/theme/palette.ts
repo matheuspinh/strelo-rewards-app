@@ -45,7 +45,7 @@ export const primary = {
 export const secondary = {
   lighter: '#EFD6FF',
   light: '#C684FF',
-  main: '#8E33FF',
+  main: '#727272',
   dark: '#5119B7',
   darker: '#27097A',
   contrastText: '#FFFFFF',
