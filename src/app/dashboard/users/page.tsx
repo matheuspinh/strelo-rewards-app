@@ -1,4 +1,4 @@
-import SortingSelectingTable from 'src/sections/users/view';
+import UserView from 'src/sections/users/view';
 
 // ----------------------------------------------------------------------
 
@@ -7,6 +7,6 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <SortingSelectingTable />;
+  return <UserView />;
   
 }

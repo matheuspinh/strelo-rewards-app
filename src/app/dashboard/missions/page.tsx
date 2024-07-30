@@ -1,11 +1,11 @@
-import TwoView from 'src/sections/two/view';
+import MissionViews from 'src/sections/missions/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Two',
+  title: 'Dashboard: Missions',
 };
 
 export default function Page() {
-  return <TwoView />;
+  return <MissionViews />;
 }

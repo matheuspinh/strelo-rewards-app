@@ -40,11 +40,11 @@ const TABLE_HEAD = [
   { id: 'gold', label: 'Moedas', align: 'right' },
   { id: 'xp', label: 'Experiência', align: 'right' },
   { id: 'id',  label: '', align: 'right' }, 
-];
+]
 
 // ----------------------------------------------------------------------
 
-export default function SortingSelectingTable() {
+export default function UserView() {
   const table = useTable({
     defaultOrderBy: 'name',
     defaultRowsPerPage: 100
@@ -83,7 +83,7 @@ export default function SortingSelectingTable() {
         <UserFormModal />
       </Stack>
 
-      <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+      <TableContainer sx={{ position: 'relative', borderRadius: '1rem', overflow: 'unset', boxShadow: '0px 12px 24px 0px #919EAB1F' }}>
         <TableSelectedAction
           numSelected={table.selected.length}
           rowCount={tableData.length}
@@ -124,7 +124,7 @@ export default function SortingSelectingTable() {
                   <TableRow
                     hover
                     key={row.id}
-                    onClick={() => console.log(row.id)}
+                    onClick={() => console.log('soon')}
                   >
                     <TableCell>
                       <Box display={'flex'} flexDirection={'row'} alignItems={'center'} gap={'1rem'}>

@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 import { HOST_API } from 'src/config-global';
+import { list } from 'src/theme/overrides/components/list';
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +41,13 @@ export const endpoints = {
     delete: '/api/users',
     detail: '/api/users/',
     update: '/api/users/'
+  },
+  missions:{
+    list: '/api/missions',
+    register: '/api/missions',
+    delete: '/api/missions',
+    detail: '/api/mission',
+    update: '/api/mission'
   },
   mail: {
     list: '/api/mail/list',

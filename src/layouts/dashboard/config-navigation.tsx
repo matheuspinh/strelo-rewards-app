@@ -52,7 +52,7 @@ export function useNavData() {
         subheader: 'Overview',
         items: [
           { title: 'Usuários', path: paths.dashboard.root, icon: ICONS.dashboard },
-          { title: 'Missões', path: paths.dashboard.two, icon: ICONS.ecommerce },
+          { title: 'Missões', path: paths.dashboard.missions, icon: ICONS.ecommerce },
           {
             title: 'Conquistas',
             path: paths.dashboard.three,

@@ -127,6 +127,7 @@ export default function UserFormModal({user}: {user?: User}) {
 
   useEffect(() => {
     if(modal === 'open'){
+      !edit && reset()  
       open.onTrue()
     } else {
       open.onFalse()
