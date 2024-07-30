@@ -1,5 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import axios, { endpoints } from "src/utils/axios";
+
 import { MissionsContext } from "./missions-context";
 
 interface ProviderProps {
@@ -50,7 +53,7 @@ export function MissionsProvider({ children }: ProviderProps){
       })
       return res.data
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (dataRes, variables) => {
       const queryKeys = [
         ['missions'],
         ['mission', variables.id]
@@ -59,6 +62,15 @@ export function MissionsProvider({ children }: ProviderProps){
     }
   })
 
-  return <MissionsContext.Provider value={{data, registerMission, isLoading, isError, deleteMission, updateMission}}>{children}</MissionsContext.Provider>
+  const contextValue = useMemo(() => ({
+    data,
+    registerMission,
+    isLoading,
+    isError,
+    deleteMission,
+    updateMission
+  }), [data, registerMission, isLoading, isError, deleteMission, updateMission]);
+
+  return <MissionsContext.Provider value={contextValue}>{children}</MissionsContext.Provider>
 
 }

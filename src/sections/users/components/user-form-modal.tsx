@@ -1,18 +1,22 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Close, Label } from "@mui/icons-material";
-import { Box, Button, Dialog, dialogClasses, IconButton, Input, InputAdornment, InputBase, Typography, useTheme } from "@mui/material";
-import { useCallback, useEffect } from "react";
+import * as Yup from 'yup'
 import { useForm } from "react-hook-form";
+import { useEffect, useCallback } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import { Close } from "@mui/icons-material";
+import { Box, Button, Dialog, useTheme, IconButton, Typography, dialogClasses, InputAdornment } from "@mui/material";
+
+import { useBoolean } from "src/hooks/use-boolean";
+import { useUser } from "src/hooks/use-user-detail";
+import { useUsersContext } from "src/hooks/use-users-context";
+
 import { User } from "src/app/contexts/users/types";
+
+import Iconify from "src/components/iconify";
 import { RHFTextField } from "src/components/hook-form";
 import FormProvider from "src/components/hook-form/form-provider";
 import { RHFUploadAvatar } from "src/components/hook-form/rhf-upload";
-import Iconify from "src/components/iconify";
-import { useBoolean } from "src/hooks/use-boolean";
-import { useUsersContext } from "src/hooks/use-users-context";
-import { useRouter, useSearchParams } from "next/navigation";
-import * as Yup from 'yup'
-import { useUser } from "src/hooks/use-user-detail";
 
 
 
@@ -26,7 +30,7 @@ export default function UserFormModal({user}: {user?: User}) {
 
   const {registerUser, updateUser} = useUsersContext();
 
-  const {data, isLoading, isError} = useUser(edit!);
+  const {data: userData, isLoading, isError} = useUser(edit!);
 
   const theme = useTheme();
 
@@ -43,13 +47,13 @@ export default function UserFormModal({user}: {user?: User}) {
 
   const { setValue, handleSubmit, reset, setError } = methods;
 
-  if(!isLoading && data){
-    setValue('username', data.username)
-    setValue('email', data.email) 
+  if(!isLoading && userData){
+    setValue('username', userData.username)
+    setValue('email', userData.email) 
 
-    if (data.avatarUrl){
+    if (userData.avatarUrl){
       const file = {
-        preview: data.avatarUrl
+        preview: userData.avatarUrl
       }
       setValue('image', file, { shouldValidate: true })
     }
@@ -90,7 +94,7 @@ export default function UserFormModal({user}: {user?: User}) {
       reset()
       password.onFalse();
       router.push('/dashboard')
-     return
+     
     } catch (error) {
       if (error.message){
         if(error.message.includes('E-mail')){
@@ -127,12 +131,14 @@ export default function UserFormModal({user}: {user?: User}) {
 
   useEffect(() => {
     if(modal === 'open'){
-      !edit && reset()  
+      if(!edit){
+        reset()  
+      }
       open.onTrue()
     } else {
       open.onFalse()
     }
-    }, [modal])
+    }, [modal, edit, open, reset])
 
   const renderButton = (
     <Button onClick={handleOpenModal} variant="outlined" color='primary'>Novo Usuário</Button>
@@ -162,15 +168,15 @@ export default function UserFormModal({user}: {user?: User}) {
         },
       }}>
 
-        <Box height={'40rem'} width={'23.4375rem'} padding={'2rem 1.2rem'}>
-          <Box display={'flex'}  marginBottom={'3rem'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
+        <Box height="40rem" width="23.4375rem" padding="2rem 1.2rem">
+          <Box display="flex"  marginBottom="3rem" flexDirection="row" alignItems="center" justifyContent="space-between">
             <Typography  variant="h4">Novo Usuário</Typography>
-            <Close fontSize={"large"} onClick={handleClose} />
+            <Close fontSize="large" onClick={handleClose} />
           </Box>
           <FormProvider methods={methods} onSubmit={onSubmit}>
-          <Box display={'flex'} flexDirection={'column'} gap={'2.5rem'}>
+          <Box display="flex" flexDirection="column" gap="2.5rem">
             <RHFUploadAvatar name='image' onDrop={handleDrop}/>
-            <Box display={'flex'} flexDirection={'column'} gap={'1.5rem'}>
+            <Box display="flex" flexDirection="column" gap="1.5rem">
               <RHFTextField name='username' label='Nome'/>
               <RHFTextField name='email' label='E-mail'/>
               <RHFTextField 

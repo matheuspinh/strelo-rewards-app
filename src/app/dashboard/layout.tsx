@@ -1,7 +1,8 @@
 'use client';
 
-import { AuthGuard, RoleBasedGuard } from 'src/auth/guard';
 import DashboardLayout from 'src/layouts/dashboard';
+import { AuthGuard, RoleBasedGuard } from 'src/auth/guard';
+
 import { UsersProvider } from '../contexts/users/users-provider';
 import { MissionsProvider } from '../contexts/missions/missions-provider';
 

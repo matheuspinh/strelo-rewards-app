@@ -1,4 +1,5 @@
 // In Next.js, this file would be called: app/providers.jsx
+
 'use client'
 
 import {
@@ -17,16 +18,16 @@ function makeQueryClient() {
   })
 }
 
-let browserQueryClient: QueryClient | undefined = undefined
+let browserQueryClient: QueryClient | undefined
 
 function getQueryClient() {
   if (isServer) {
     return makeQueryClient()
-  } else {
+  } 
 
     if (!browserQueryClient) browserQueryClient = makeQueryClient()
     return browserQueryClient
-  }
+  
 }
 
 export default function Providers({ children }: { children: React.ReactNode }) {

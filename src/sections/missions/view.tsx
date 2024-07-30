@@ -1,24 +1,23 @@
 'use client';
 
-import Box from '@mui/material/Box';
-import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import { useState, useEffect } from 'react';
 
-import { useSettingsContext } from 'src/components/settings';
-import { Avatar, IconButton, LinearProgress, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Tooltip } from '@mui/material';
-import Scrollbar from 'src/components/scrollbar';
-import { emptyRows, getComparator, TableEmptyRows, TableHeadCustom, TableSelectedAction, useTable } from 'src/components/table';
-import OptionsPopover from './components/options-popover';
-import Iconify from 'src/components/iconify';
-import { useEffect, useState } from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { Stack, Table, Tooltip, TableRow, TableBody, TableCell, IconButton, LinearProgress, TableContainer } from '@mui/material';
+
 import { useResponsive } from 'src/hooks/use-responsive';
-import { id } from 'date-fns/locale';
-import { set } from 'nprogress';
-import Image from 'src/components/image';
-import MissionFormModal from './components/mission-form-modal';
 import { useMissionsContext } from 'src/hooks/use-missions-context';
+
 import { Mission } from 'src/app/contexts/missions/types';
+
+import Image from 'src/components/image';
+import Iconify from 'src/components/iconify';
+import Scrollbar from 'src/components/scrollbar';
+import { useTable, emptyRows, getComparator, TableEmptyRows, TableHeadCustom, TableSelectedAction } from 'src/components/table';
+
+import OptionsPopover from './components/options-popover';
+import MissionFormModal from './components/mission-form-modal';
 
 
 //
@@ -61,12 +60,6 @@ const tableMock = [
   }
 ]
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Usuário e ID', align: 'left' },
-  { id: 'gold', label: 'Moedas', align: 'right' },
-  { id: 'xp', label: 'Experiência', align: 'right' },
-  { id: 'id',  label: '', align: 'right' }, 
-];
 // ----------------------------------------------------------------------
 
 export default function MissionViews() {
@@ -91,13 +84,19 @@ export default function MissionViews() {
 
   const [tableData, setTableData] = useState<RowDataType[]>([]);
 
+  const getColor = (completionPercentage: number) => {
+    if (completionPercentage < 40) return 'error';
+    if (completionPercentage < 70) return 'warning';
+    return 'success';
+  };
+
   useEffect(() => {
-    !isLoading && data && setTableData(data.missions);
+    if(!isLoading && data){
+      setTableData(data.missions);
+    }
   }, [isLoading, data]);
 
-  const completion = (completedCount: number, usersCount: number) => {
-    return Math.ceil((completedCount/usersCount)*100);
-  }
+  const completion = (completedCount: number, usersCount: number) => Math.ceil((completedCount/usersCount)*100)
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -105,11 +104,9 @@ export default function MissionViews() {
   });
 
   return (
-    <>
-    
-    <Box marginTop={'1.625rem'} borderRadius={'1rem'} bgcolor={'background.default'}>
-    <Stack  direction="row" alignItems="center" gap={'0.625rem'} sx={{ p: 3 }}>
-      <Typography padding={'0 15px'} variant="h6">Missões ({!isLoading && data.missionCount})</Typography>
+    <Box marginTop="1.625rem" borderRadius="1rem" bgcolor="background.default">
+    <Stack  direction="row" alignItems="center" gap="0.625rem" sx={{ p: 3 }}>
+      <Typography padding='0 15px' variant="h6">Missões ({!isLoading && data.missionCount})</Typography>
       <MissionFormModal />
     </Stack>  
       <TableContainer sx={{ borderRadius:'1rem', position: 'relative', overflow: 'unset', boxShadow: '0px 12px 24px 0px #919EAB1F' }}>
@@ -132,7 +129,7 @@ export default function MissionViews() {
         />
 
         <Scrollbar>
-          <Table size={'medium'}>
+          <Table size="medium">
             <TableHeadCustom
               order={table.order}
               orderBy={table.orderBy}
@@ -157,8 +154,8 @@ export default function MissionViews() {
                     onClick={() => console.log('soon')}
                   >
                     <TableCell sx={{padding: '1rem'}}>
-                      <Box display={'flex'} flexDirection={'row'} alignItems={'center'} gap={'1rem'}>
-                        <Image width={'4rem'} height={'4rem'} borderRadius={'0.75rem'} src={row.imageUrl}/>
+                      <Box display="flex" flexDirection="row" alignItems="center" gap="1rem">
+                        <Image width="4rem" height="4rem" borderRadius="0.75rem" src={row.imageUrl}/>
                         <Box> 
                           <Typography variant="subtitle2" noWrap>
                             {row.title}
@@ -172,8 +169,8 @@ export default function MissionViews() {
                     {!isMobile && 
                     <>                              
                       <TableCell align="right" sx={{padding: '0rem 2.8125rem', width: '8.75rem'}}>
-                        <Box display={'flex'} flexDirection={'column'} alignItems={'center'} gap={'0.5rem'}>
-                         <Box display={'flex'}>
+                        <Box display="flex" flexDirection="column" alignItems="center" gap="0.5rem">
+                         <Box display="flex">
                             <ul>
                               <li>
                                 <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
@@ -200,11 +197,8 @@ export default function MissionViews() {
                         </Box>
                       </TableCell>
                       <TableCell align="right" sx={{ padding: '0rem 1rem', width:'10rem'}}>
-                        <LinearProgress color={
-                          completion(row.completedBy.length, row.users.length) <40? 'error':
-                          completion(row.completedBy.length, row.users.length) <70? 'warning':
-                          'success'
-                        } sx={{width: '5rem', height: '0.5rem'}} variant='determinate' value={completion(row.completedBy.length, row.users.length)}/>
+                        <LinearProgress color={getColor(completion(row.completedBy.length, row.users.length))}
+                         sx={{width: '5rem', height: '0.5rem'}} variant='determinate' value={completion(row.completedBy.length, row.users.length)}/>
                         <Typography sx={{fontSize:'12px', fontWeight: '400', color:'secondary.main'}} marginTop='0.5rem' align='left'>
                           {row.completedBy.length}/{row.users.length}{'  '}
                           ({completion(row.completedBy.length, row.users.length)}%)
@@ -226,7 +220,6 @@ export default function MissionViews() {
         </Scrollbar>
       </TableContainer>
     </Box>
-    </>
   );
 }
 
