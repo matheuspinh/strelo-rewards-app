@@ -1,6 +1,7 @@
 'use client'
 
 import { useContext } from "react"
+
 import { MissionsContext } from "src/app/contexts/missions/missions-context"
 
 export const useMissionsContext = () => {

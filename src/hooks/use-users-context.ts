@@ -1,6 +1,7 @@
 'use client'
 
 import { useContext } from "react";
+
 import { UsersContext } from "src/app/contexts/users/users-context";
 
 export const useUsersContext = () => {

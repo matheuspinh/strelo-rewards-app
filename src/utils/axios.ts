@@ -1,7 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 import { HOST_API } from 'src/config-global';
-import { list } from 'src/theme/overrides/components/list';
 
 // ----------------------------------------------------------------------
 

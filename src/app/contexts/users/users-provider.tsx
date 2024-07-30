@@ -1,5 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import axios, {endpoints} from "src/utils/axios";
+
 import { UsersContext } from "./users-context";
 
 interface ProviderProps {
@@ -40,7 +43,7 @@ export function UsersProvider({ children }: ProviderProps){
       });
       return res.data;
       },
-      onSuccess: (data, variables) => {
+      onSuccess: (resData, variables) => {
         const queryKeys = [
           ['users'],
           ['user', variables.id]
@@ -61,5 +64,14 @@ export function UsersProvider({ children }: ProviderProps){
 
   })
 
-  return <UsersContext.Provider value={{data, isLoading, isError, registerUser, deleteUser, updateUser}}>{children}</UsersContext.Provider>
+  const contextValues = useMemo(() => ({
+    data,
+    isLoading,
+    isError,
+    registerUser,
+    deleteUser,
+    updateUser
+  }), [data, isLoading, isError, registerUser, deleteUser, updateUser]);
+
+  return <UsersContext.Provider value={contextValues}>{children}</UsersContext.Provider>
 }

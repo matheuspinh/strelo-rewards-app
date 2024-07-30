@@ -1,15 +1,20 @@
-import { Box, Divider, IconButton, MenuItem, Stack, Typography } from "@mui/material";
 import { m } from "framer-motion";
+
+import { Close } from "@mui/icons-material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Box, Stack, Divider, MenuItem, IconButton, Typography } from "@mui/material";
+
+import { useRouter } from "src/routes/hooks";
+
+import { useBoolean } from "src/hooks/use-boolean";
+import { useUsersContext } from "src/hooks/use-users-context";
+
+import { User } from "src/app/contexts/users/types";
+
 import { varHover } from "src/components/animate";
 import { usePopover } from "src/components/custom-popover";
-import { useRouter } from "src/routes/hooks";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CustomPopover from "src/components/custom-popover/custom-popover";
-import { User } from "src/app/contexts/users/types";
-import { useUsersContext } from "src/hooks/use-users-context";
-import { useBoolean } from "src/hooks/use-boolean";
-import { Close } from "@mui/icons-material";
-import UserFormModal from "./user-form-modal";
+
 
 const OPTIONS = [
   {
@@ -36,7 +41,7 @@ export default function OptionsPopover({user}: {user:User}) {
   const handleClosePopover = () => {
     popover.onClose()
     confirmDelete.onFalse()
-    return
+    
   }
 
   const handleEdit = () => {
@@ -96,8 +101,8 @@ export default function OptionsPopover({user}: {user:User}) {
               Confirmar Exclusão
               </Box>
               <Box 
-                display={'inline-flex'} 
-                alignItems={'center'} 
+                display="inline-flex" 
+                alignItems="center" 
                 sx={{
                   border: '1px solid', 
                   borderRadius: '5px', 
@@ -106,9 +111,12 @@ export default function OptionsPopover({user}: {user:User}) {
                   },
                   width: '22px'
                 }}
-                onClick={(e) => {e.stopPropagation, confirmDelete.onFalse()}}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  confirmDelete.onFalse()
+                }}
               >
-              <Close fontSize={"small"}  />
+              <Close fontSize="small"  />
             </Box>
           </MenuItem>) :
           (<MenuItem onClick={confirmDelete.onTrue}
