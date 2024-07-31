@@ -16,39 +16,12 @@ import { useTable, emptyRows, getComparator, TableEmptyRows, TableHeadCustom, Ta
 
 import OptionsPopover from './components/options-popover';
 import BadgesFormModal from './components/badges-form-modal';
+import { Badge } from 'src/app/contexts/badges/types';
 
 
 //
 
-type RowDataType = any;
-
-const tableMock = {
-  badges:[
-  { 
-    id: 1,
-    title: 'Badge 1',
-    description: 'Descrição da badge 1',
-    earnedCount: 100,
-    imageUrl: 'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
-  },
-  { 
-    id: 2,
-    title: 'Badge 2',
-    description: 'Descrição da badge 2',
-    earnedCount: 100,
-    imageUrl: 'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
-  },
-  { 
-    id: 3,
-    title: 'Badge 3',
-    description: 'Descrição da badge 3',
-    earnedCount: 100,
-    imageUrl: 'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
-  },
-],
-badgesCount: 3}
-
-// ----------------------------------------------------------------------
+type RowDataType = Badge;
 
 export default function BadgesView() {
   const table = useTable({
@@ -85,7 +58,7 @@ export default function BadgesView() {
   return (
     <Box marginTop="1.625rem" borderRadius="1rem" bgcolor="background.default">
     <Stack  direction="row" alignItems="center" gap="0.625rem" sx={{ p: 3 }}>
-      <Typography padding='0 15px' variant="h6">Conquistas ({!isLoading && data.badgesCount})</Typography>
+      <Typography padding='0 15px' variant="h6">Conquistas ({!isLoading && data && data.badgesCount})</Typography>
       <BadgesFormModal />
     </Stack>  
       <TableContainer sx={{ borderRadius:'1rem', position: 'relative', overflow: 'unset', boxShadow: '0px 12px 24px 0px #919EAB1F' }}>
