@@ -5,55 +5,63 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Close } from "@mui/icons-material";
-import { Box, Button, Dialog, useTheme, IconButton, Typography, dialogClasses, InputAdornment } from "@mui/material";
+import { Box, Button, Dialog, useTheme, Typography, dialogClasses } from "@mui/material";
 
 import { useBoolean } from "src/hooks/use-boolean";
-import { useUser } from "src/hooks/use-user-detail";
-import { useUsersContext } from "src/hooks/use-users-context";
+import { useBadge } from 'src/hooks/use-badge-detail';
+import { useResponsive } from "src/hooks/use-responsive";
+import { useBadgesContext } from 'src/hooks/use-badges-context';
 
-import { User } from "src/app/contexts/users/types";
-
-import Iconify from "src/components/iconify";
 import { RHFTextField } from "src/components/hook-form";
 import FormProvider from "src/components/hook-form/form-provider";
 import { RHFUploadAvatar } from "src/components/hook-form/rhf-upload";
 
-
-
-export default function UserFormModal({user}: {user?: User}) {
+export const badgesMock = [
+  { id: '1', name: 'Badge 1'},
+  { id: '2', name: 'Badge 2'},
+  { id: '3', name: 'Badge 3'},
+  { id: '4', name: 'Badge 4'},
+  { id: '5', name: 'Badge 5'},
+  { id: '6', name: 'Badge 6'},
+  { id: '7', name: 'Badge 7'},
+  { id: '8', name: 'Badge 8'},
+  { id: '9', name: 'Badge 9'},
+  { id: '10', name: 'Badge 10'},
+]
+export default function BadgesFormModal() {
   const router = useRouter()
   const searchParams = useSearchParams();
   const open = useBoolean();
-  const modal = searchParams.get('user-modal');
+  const modal = searchParams.get('badge-modal');
   const edit = searchParams.get('edit')
+  const isMobile = useResponsive('down', 'sm');
   const password = useBoolean();
 
-  const {registerUser, updateUser} = useUsersContext();
+  const { registerBadge, updateBadge } = useBadgesContext();
 
-  const {data: userData, isLoading, isError} = useUser(edit!);
+  const {data: badgeData, isLoading, isError} = useBadge(edit!);
 
   const theme = useTheme();
 
   const userFormSchema = Yup.object().shape({
     image: Yup.mixed().nullable(),
-    username: Yup.string().required('Nome é obrigatório'),
-    email: Yup.string().email('Email inválido').required('Email é obrigatório'),
-    password: Yup.string().required('Senha é obrigatória'),
+    title: Yup.string().required('Título é obrigatório'),
+    description: Yup.string().required('Descreva a missão.'),
   })
 
   const methods = useForm({
-    resolver: yupResolver(userFormSchema)
+    resolver: yupResolver(userFormSchema),
   })
 
-  const { setValue, handleSubmit, reset, setError } = methods;
+  const { setValue, handleSubmit, reset } = methods;
 
-  if(!isLoading && userData){
-    setValue('username', userData.username)
-    setValue('email', userData.email) 
+  if(!isLoading && badgeData){
+    setValue('title', badgeData.title)
+    setValue('description', badgeData.description) 
 
-    if (userData.avatarUrl){
+    if (badgeData.imageUrl){
       const file = {
-        preview: userData.avatarUrl
+        preview: badgeData.imageUrl
       }
       setValue('image', file, { shouldValidate: true })
     }
@@ -61,46 +69,37 @@ export default function UserFormModal({user}: {user?: User}) {
 
   const onSubmit = handleSubmit(async(data) => {
     if(edit){
+
       try{
         const formData = new FormData();
-        formData.append('username', data.username);
-        formData.append('email', data.email);
-        formData.append('password', data.password);
+        formData.append('title', data.title);
+        formData.append('description', data.description);
         if(data.image && data.image instanceof File){
           formData.append('image', data.image);
         }
-        await updateUser({id: edit, formData});
-        reset()
-        password.onFalse();
-        router.push('/dashboard')
-       return
-      } catch (error) {
-        if (error.message){
-          if(error.message.includes('E-mail')){
-            setError('email', {message: 'E-mail já cadastrado'})
-        }
-      }
-    }}
 
+        await updateBadge({id: edit, formData});
+        router.push('/dashboard/badges/')
+        return
+      } catch (error) {
+        console.log(error)
+      }
+    }
     try{
       const formData = new FormData();
-      formData.append('username', data.username);
-      formData.append('email', data.email);
-      formData.append('password', data.password);
+      
+      formData.append('title', data.title);
+      formData.append('description', data.description);
       if(data.image && data.image instanceof File){
         formData.append('image', data.image);
       }
-      await registerUser(formData);
-      reset()
-      password.onFalse();
-      router.push('/dashboard')
-     
+
+      await registerBadge(formData);
+      router.push('/dashboard/badges/')
+      
     } catch (error) {
-      if (error.message){
-        if(error.message.includes('E-mail')){
-          setError('email', {message: 'E-mail já cadastrado'})
-      }
-    }}
+      console.log(error)
+    }
   })
 
   const handleDrop = useCallback(
@@ -119,21 +118,21 @@ export default function UserFormModal({user}: {user?: User}) {
   );
 
   const handleOpenModal = () =>{
-    router.push('?user-modal=open', undefined)
+    router.push('?badge-modal=open', undefined)
   }
 
 
   const handleClose = () => {
     reset()
     password.onFalse();
-    router.push('/dashboard')
+    router.push('/dashboard/badges/', undefined)
   }
 
   useEffect(() => {
     if(modal === 'open'){
       if(!edit){
-        reset()  
-      }
+        reset()
+      }  
       open.onTrue()
     } else {
       open.onFalse()
@@ -142,7 +141,7 @@ export default function UserFormModal({user}: {user?: User}) {
     }, [modal, edit, reset])
 
   const renderButton = (
-    <Button onClick={handleOpenModal} variant="outlined" color='primary'>Novo Usuário</Button>
+    <Button onClick={handleOpenModal} variant="outlined" color='primary'>Nova Conquista</Button>
   )
 
   return (
@@ -171,29 +170,16 @@ export default function UserFormModal({user}: {user?: User}) {
 
         <Box height="40rem" width="23.4375rem" padding="2rem 1.2rem">
           <Box display="flex"  marginBottom="3rem" flexDirection="row" alignItems="center" justifyContent="space-between">
-            <Typography  variant="h4">Novo Usuário</Typography>
+            <Typography  variant="h4">{edit ? 'Editar Conquista' : 'Nova Conquista'}</Typography>
             <Close fontSize="large" onClick={handleClose} />
           </Box>
           <FormProvider methods={methods} onSubmit={onSubmit}>
           <Box display="flex" flexDirection="column" gap="2.5rem">
             <RHFUploadAvatar name='image' onDrop={handleDrop}/>
             <Box display="flex" flexDirection="column" gap="1.5rem">
-              <RHFTextField name='username' label='Nome'/>
-              <RHFTextField name='email' label='E-mail'/>
-              <RHFTextField 
-              name='password'
-              label='Senha' 
-              type={password.value ? 'text' : 'password'}
-              InputProps={{
-              endAdornment: (
-            <InputAdornment position="end">
-              <IconButton onClick={password.onToggle} edge="end">
-                <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}/>
-              <Button fullWidth variant="contained" size="large" type='submit'>Criar Usuário</Button>
+              <RHFTextField name='title' label='Título'/>
+              <RHFTextField name='description' multiline rows={3} label='Descrição'/>
+              <Button fullWidth variant="contained" size="large" type='submit'>{edit ? 'Editar Conquista': 'Criar Conquista'}</Button>
             </Box>            
           </Box>
           </FormProvider>
