@@ -55,7 +55,7 @@ export function useNavData() {
           { title: 'Missões', path: paths.dashboard.missions, icon: ICONS.ecommerce },
           {
             title: 'Conquistas',
-            path: paths.dashboard.three,
+            path: paths.dashboard.badges,
             icon: ICONS.analytics,
           },
           { title: 'Privilégios', path: paths.dashboard.group.root, icon: ICONS.banking }

@@ -48,6 +48,13 @@ export const endpoints = {
     detail: '/api/mission',
     update: '/api/mission'
   },
+  badges:{
+    list: '/api/badges',
+    register: '/api/badges',
+    delete: '/api/badges',
+    detail: '/api/badges',
+    update: '/api/badges'
+  },
   mail: {
     list: '/api/mail/list',
     details: '/api/mail/details',

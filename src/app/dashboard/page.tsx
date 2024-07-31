@@ -3,7 +3,7 @@ import SortingSelectingTable from 'src/sections/users/view';
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Users',
+  title: 'Dashboard: Usuários',
 };
 
 export default function Page() {
