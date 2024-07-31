@@ -1,4 +1,4 @@
-export type Badges = {
+export type Badge = {
   id: string,
   title: string
   description: string
@@ -7,7 +7,7 @@ export type Badges = {
 }
 
 export type BadgesList = {
-  badges: Badges[];
+  badges: Badge[];
   badgesCount: number;
 }
 
@@ -16,4 +16,6 @@ export type BadgesContextType= {
   isLoading: boolean;
   isError: boolean;
   registerBadge: (formData: any) => Promise<any>;
+  deleteBadge: (id: string) => Promise<any>;
+  updateBadge: ({id, formData}:{id: string, formData: any}) => Promise<any>;
 }

@@ -34,19 +34,19 @@ export function BadgesProvider({ children }: ProviderProps){
     }
   })
 
-  const { mutateAsync: deleteMission } = useMutation({
+  const { mutateAsync: deleteBadge } = useMutation({
     mutationFn: async (id: string) => {
-      const res = await axios.delete(`${endpoints.missions.delete}/${id}`)
+      const res = await axios.delete(`${endpoints.badges.delete}/${id}`)
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey:['missions']})
+      queryClient.invalidateQueries({queryKey:['badges']})
     }
   })
 
-  const {mutateAsync: updateMission} = useMutation({
+  const {mutateAsync: updateBadge} = useMutation({
     mutationFn: async ({id, formData} : {id: string, formData: any}) => {
-      const res = await axios.patch(`${endpoints.missions.update}/${id}`, formData, {
+      const res = await axios.patch(`${endpoints.badges.update}/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -55,8 +55,8 @@ export function BadgesProvider({ children }: ProviderProps){
     },
     onSuccess: (dataRes, variables) => {
       const queryKeys = [
-        ['missions'],
-        ['mission', variables.id]
+        ['badges'],
+        ['badge', variables.id]
       ]
       queryKeys.forEach(key => queryClient.invalidateQueries({queryKey: key}))
     }
@@ -65,9 +65,11 @@ export function BadgesProvider({ children }: ProviderProps){
   const contextValue = useMemo(() => ({
     data,
     registerBadge,
+    deleteBadge,
+    updateBadge,
     isLoading,
     isError,
-  }), [data, registerBadge, isLoading, isError]);
+  }), [data, registerBadge, deleteBadge, updateBadge, isLoading, isError]);
 
   return <BadgesContext.Provider value={contextValue}>{children}</BadgesContext.Provider>
 
