@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import { register } from 'module';
 
 import { HOST_API } from 'src/config-global';
 
@@ -47,6 +48,10 @@ export const endpoints = {
     delete: '/api/missions',
     detail: '/api/mission',
     update: '/api/mission'
+  },
+  badges:{
+    list: '/api/badges',
+    register: '/api/badges',
   },
   mail: {
     list: '/api/mail/list',
