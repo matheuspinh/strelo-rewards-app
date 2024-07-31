@@ -7,9 +7,9 @@ import { Box, Stack, MenuItem, IconButton } from "@mui/material";
 import { useRouter } from "src/routes/hooks";
 
 import { useBoolean } from "src/hooks/use-boolean";
-import { useMissionsContext } from "src/hooks/use-missions-context";
+import { useBadgesContext } from "src/hooks/use-badges-context";
 
-import { Mission } from "src/app/contexts/missions/types";
+import { Badge } from "src/app/contexts/badges/types";
 
 import { varHover } from "src/components/animate";
 import { usePopover } from "src/components/custom-popover";
@@ -22,16 +22,16 @@ const OPTIONS = [
   }
 ]
 
-export default function OptionsPopover({mission}: {mission:Mission}) {
+export default function OptionsPopover({badge}: {badge:Badge}) {
   const router = useRouter();
   const popover = usePopover()
 
   const confirmDelete = useBoolean()
-  const editMission = useBoolean()
-  const {deleteMission} = useMissionsContext()
+  const editBadge = useBoolean()
+  const {deleteBadge} = useBadgesContext()
 
   const handleDelete = async () => {
-    await deleteMission(mission.id)
+    await deleteBadge(badge.id)
     confirmDelete.onFalse()
     popover.onClose()
   }
@@ -43,16 +43,10 @@ export default function OptionsPopover({mission}: {mission:Mission}) {
   }
 
   const handleEdit = () => {
-    router.push(`?badge-modal=open&edit=${mission.id}`, undefined)
+    router.push(`?badge-modal=open&edit=${badge.id}`, undefined)
     handleClosePopover()
   }
   
-
-  const handleClickItem = (path: string) => {
-    popover.onClose();
-    router.push(path);
-  }
-
   return (
     <>
       <IconButton

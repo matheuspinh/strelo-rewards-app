@@ -4,12 +4,10 @@ import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Stack, Table, Tooltip, TableRow, TableBody, TableCell, IconButton, LinearProgress, TableContainer } from '@mui/material';
+import { Stack, Table, Tooltip, TableRow, TableBody, TableCell, IconButton, TableContainer } from '@mui/material';
 
 import { useResponsive } from 'src/hooks/use-responsive';
-import { useMissionsContext } from 'src/hooks/use-missions-context';
-
-import { Mission } from 'src/app/contexts/missions/types';
+import { useBadgesContext } from 'src/hooks/use-badges-context';
 
 import Image from 'src/components/image';
 import Iconify from 'src/components/iconify';
@@ -18,7 +16,6 @@ import { useTable, emptyRows, getComparator, TableEmptyRows, TableHeadCustom, Ta
 
 import OptionsPopover from './components/options-popover';
 import BadgesFormModal from './components/badges-form-modal';
-import { useBadgesContext } from 'src/hooks/use-badges-context';
 
 
 //
@@ -149,13 +146,11 @@ export default function BadgesView() {
                       </Box>       
                     </TableCell>
                     {!isMobile && 
-                    <>                              
-                      <TableCell align="center" sx={{padding: '0rem 2.8125rem', width: '8.75rem'}}>
+                    <TableCell align="center" sx={{padding: '0rem 2.8125rem', width: '8.75rem'}}>
                         {row.earnedBy.length}
-                      </TableCell>
-                    </>}       
+                      </TableCell>}       
                     <TableCell align="right" sx={{width:'4.25rem'}}>
-                      <OptionsPopover mission={row}/>
+                      <OptionsPopover badge={row}/>
                     </TableCell>
                       
                   </TableRow>

@@ -5,22 +5,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Close } from "@mui/icons-material";
-import { Box, Chip, Avatar, Button, Dialog, useTheme, Typography, dialogClasses, InputAdornment, IconButton } from "@mui/material";
+import { Box, Button, Dialog, useTheme, Typography, dialogClasses } from "@mui/material";
 
 import { useBoolean } from "src/hooks/use-boolean";
+import { useBadge } from 'src/hooks/use-badge-detail';
 import { useResponsive } from "src/hooks/use-responsive";
-import { useMission } from "src/hooks/use-mission-detail";
-import { useUsersContext } from "src/hooks/use-users-context";
-import { useMissionsContext } from "src/hooks/use-missions-context";
+import { useBadgesContext } from 'src/hooks/use-badges-context';
 
 import { RHFTextField } from "src/components/hook-form";
-import { RHFUpload, RHFUploadAvatar } from "src/components/hook-form/rhf-upload";
 import FormProvider from "src/components/hook-form/form-provider";
-import { RHFMultiSelect } from "src/components/hook-form/rhf-select";
-import RHFAutocomplete from "src/components/hook-form/rhf-autocomplete";
-import Iconify from 'src/components/iconify';
-import { useBadgesContext } from 'src/hooks/use-badges-context';
-import image from 'src/components/image';
+import { RHFUploadAvatar } from "src/components/hook-form/rhf-upload";
 
 export const badgesMock = [
   { id: '1', name: 'Badge 1'},
@@ -43,11 +37,9 @@ export default function BadgesFormModal() {
   const isMobile = useResponsive('down', 'sm');
   const password = useBoolean();
 
-  const { registerBadge } = useBadgesContext();
+  const { registerBadge, updateBadge } = useBadgesContext();
 
-  const {data: missionData, isLoading, isError} = useMission(edit!);
-
-  const badgeData = badgesMock.map(badge => ({label: badge.name, value: badge.id}))
+  const {data: badgeData, isLoading, isError} = useBadge(edit!);
 
   const theme = useTheme();
 
@@ -63,13 +55,13 @@ export default function BadgesFormModal() {
 
   const { setValue, handleSubmit, reset } = methods;
 
-  if(!isLoading && missionData){
-    setValue('title', missionData.title)
-    setValue('description', missionData.description) 
+  if(!isLoading && badgeData){
+    setValue('title', badgeData.title)
+    setValue('description', badgeData.description) 
 
-    if (missionData.imageUrl){
+    if (badgeData.imageUrl){
       const file = {
-        preview: missionData.imageUrl
+        preview: badgeData.imageUrl
       }
       setValue('image', file, { shouldValidate: true })
     }
@@ -77,6 +69,7 @@ export default function BadgesFormModal() {
 
   const onSubmit = handleSubmit(async(data) => {
     if(edit){
+
       try{
         const formData = new FormData();
         formData.append('title', data.title);
@@ -84,7 +77,8 @@ export default function BadgesFormModal() {
         if(data.image && data.image instanceof File){
           formData.append('image', data.image);
         }
-        // await updateMission({id: edit, formData});
+
+        await updateBadge({id: edit, formData});
         router.push('/dashboard/badges/')
         return
       } catch (error) {
@@ -143,6 +137,7 @@ export default function BadgesFormModal() {
     } else {
       open.onFalse()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [modal, edit, reset])
 
   const renderButton = (
@@ -175,7 +170,7 @@ export default function BadgesFormModal() {
 
         <Box height="40rem" width="23.4375rem" padding="2rem 1.2rem">
           <Box display="flex"  marginBottom="3rem" flexDirection="row" alignItems="center" justifyContent="space-between">
-            <Typography  variant="h4">Nova Conquista</Typography>
+            <Typography  variant="h4">{edit ? 'Editar Conquista' : 'Nova Conquista'}</Typography>
             <Close fontSize="large" onClick={handleClose} />
           </Box>
           <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -184,7 +179,7 @@ export default function BadgesFormModal() {
             <Box display="flex" flexDirection="column" gap="1.5rem">
               <RHFTextField name='title' label='Título'/>
               <RHFTextField name='description' multiline rows={3} label='Descrição'/>
-              <Button fullWidth variant="contained" size="large" type='submit'>Criar Conquista</Button>
+              <Button fullWidth variant="contained" size="large" type='submit'>{edit ? 'Editar Conquista': 'Criar Conquista'}</Button>
             </Box>            
           </Box>
           </FormProvider>
