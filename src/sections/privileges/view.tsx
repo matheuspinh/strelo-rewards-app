@@ -27,42 +27,10 @@ import {
 } from 'src/components/table';
 import OptionsPopover from './components/options-popover';
 import PrivilegesModal from './components/privileges-form-modal';
+import { usePrivilegesContext } from 'src/hooks/use-privileges-context';
+import { Privilege } from 'src/app/contexts/privileges/types';
 
-// ----------------------------------------------------------------------
-
-const tableMock = {
-  privileges: [
-    {
-    id: 1,
-    title: 'Privilégio 1',
-    description: 'User has access to all features',
-    users: [],
-    gold: 50,
-    xp: 100,
-    badges: ['badge 1', 'badge 2']},
-    {
-      id: 3,
-      title: 'Privilégio 3',
-      description: 'User has access to all features',
-      users: [],
-      gold: 200,
-      xp: 450,
-      badges: []
-    },
-    {
-      id: 2,
-      title: 'Privilégio 2',
-      description: 'User has access to all features',
-      users: [],
-      gold: 150,
-      xp: 2500,
-      badges: []
-    },
-  ],
-  privilegesCount: 3,
-}
-
-type RowDataType = any;
+type RowDataType = Privilege;
 
 // ----------------------------------------------------------------------
 
@@ -84,14 +52,13 @@ export default function PrivilegesView() {
       { id: 'id',  label: '', align: 'right' }
     ]
 
-  // const {isLoading} = useUsersContext()
-  const isLoading = false; 
-  const data = tableMock;
+  const { data, isLoading } = usePrivilegesContext();
 
   const [tableData, setTableData] = useState<RowDataType[]>([]);
 
   useEffect(() => {
     if(!isLoading ){
+ 
       setTableData(data.privileges);
     } 
   }, [isLoading, data]);
@@ -182,19 +149,19 @@ export default function PrivilegesView() {
                                   <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Exp</Typography>
                                 </Box>
                               </li>
-                              {row.badgesCount > 0 &&
+
                                 <li>
                                   <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
-                                    <Typography variant="subtitle2">{row.badgesCount} </Typography>
-                                    <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badges</Typography>
+                                    <Typography variant="subtitle2"> {row.requiredBadge ? 1: 0}</Typography>
+                                    <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badge</Typography>
                                   </Box>
                                 </li>
-                              }
+
                             </ul>
                           </Box>
                         </Box>
                       </TableCell>
-                      <TableCell align="center" sx={{width:'8.125rem'}}>{row.badges.length}</TableCell>
+                      <TableCell align="center" sx={{width:'8.125rem'}}>{row.users.length}</TableCell>
                     </>}       
                     <TableCell align="right" sx={{width:'4.375rem'}}>
                       <OptionsPopover privilege={row}/>
