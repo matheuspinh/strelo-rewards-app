@@ -66,7 +66,6 @@ export default function UserView() {
     } 
   }, [isLoading, data]);
 
-
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
