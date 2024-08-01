@@ -1,4 +1,5 @@
 import { User } from "../users/types"
+import { Badge } from "../badges/types"
 
 export type Mission = {
   id: string,
@@ -12,7 +13,7 @@ export type Mission = {
   companyId: string
   badgesIDs: string[]
   users: User[]
-  badges: any[]
+  badges: Badge[]
 }
 
 export type MissionsList = {

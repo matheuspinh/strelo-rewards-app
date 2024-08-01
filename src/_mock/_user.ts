@@ -23,12 +23,6 @@ export const _userAbout = {
   totalFollowing: _mock.number.nativeL(2),
   quote:
     'Tart I love sugar plum I love oat cake. Sweet roll caramels I love jujubes. Topping cake wafer..',
-  socialLinks: {
-    facebook: `https://www.facebook.com/caitlyn.kerluke`,
-    instagram: `https://www.instagram.com/caitlyn.kerluke`,
-    linkedin: `https://www.linkedin.com/in/caitlyn.kerluke`,
-    twitter: `https://www.twitter.com/caitlyn.kerluke`,
-  },
 };
 
 export const _userFollowers = [...Array(18)].map((_, index) => ({
