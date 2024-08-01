@@ -58,7 +58,7 @@ export function useNavData() {
             path: paths.dashboard.badges,
             icon: ICONS.analytics,
           },
-          { title: 'Privilégios', path: paths.dashboard.group.root, icon: ICONS.banking }
+          { title: 'Privilégios', path: paths.dashboard.privileges, icon: ICONS.banking }
         ],
       },
     ],

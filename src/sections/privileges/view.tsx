@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 
+import { Box } from '@mui/material';
 import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import { Box, Avatar } from '@mui/material';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
@@ -14,9 +14,9 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 
 import { useResponsive } from 'src/hooks/use-responsive';
-import { useUsersContext } from 'src/hooks/use-users-context';
+import { usePrivilegesContext } from 'src/hooks/use-privileges-context';
 
-import { User } from 'src/app/contexts/users/types';
+import { Privilege } from 'src/app/contexts/privileges/types';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -29,16 +29,15 @@ import {
   TableSelectedAction,
 } from 'src/components/table';
 
-import UserFormModal from './components/user-form-modal';
 import OptionsPopover from './components/options-popover';
+import PrivilegesModal from './components/privileges-form-modal';
+import PrivilegeUserModal from './components/privilege-user-modal';
+
+type RowDataType = Privilege;
 
 // ----------------------------------------------------------------------
 
-type RowDataType = User;
-
-// ----------------------------------------------------------------------
-
-export default function UserView() {
+export default function PrivilegesView() {
   const table = useTable({
     defaultOrderBy: 'name',
     defaultRowsPerPage: 100
@@ -47,24 +46,25 @@ export default function UserView() {
   const isMobile = useResponsive('down', 'sm');
 
   const TABLE_HEAD = isMobile ? [
-      { id: 'name', label: 'Usuário e ID', align: 'left' },
+      { id: 'title', label: 'Privilégios', align: 'left' },
       { id: 'id',  label: '', align: 'right' }
     ]:[
-      { id: 'name', label: 'Usuário e ID', align: 'left' },
-      { id: 'gold', label: 'Moedas', align: 'right' },
-      { id: 'xp', label: 'Experiência', align: 'right' },
+      { id: 'title', label: 'Privilégios', align: 'left' },
+      { id: 'requirements', label: 'Requisitos necessários', align: 'center' },
+      { id: 'earnedBY', label: 'Conquistaram', align: 'center' },
       { id: 'id',  label: '', align: 'right' }
     ]
 
-  const {data, isLoading} = useUsersContext()
+  const { data, isLoading } = usePrivilegesContext();
 
   const [tableData, setTableData] = useState<RowDataType[]>([]);
 
   useEffect(() => {
     if(!isLoading ){
-      setTableData(data.users);
+      setTableData(data.privileges);
     } 
   }, [isLoading, data]);
+
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -74,8 +74,8 @@ export default function UserView() {
   return (
     <Box marginTop="1.625rem" borderRadius="1rem" bgcolor="background.default">
       <Stack  direction="row" alignItems="center" gap="0.625rem" sx={{ p: 3 }}>
-        <Typography padding="0 15px" variant="h6">Usuários ({!isLoading && data.userCount})</Typography>
-        <UserFormModal />
+        <Typography padding="0 15px" variant="h6">Privilégios ({!isLoading && data.privilegesCount})</Typography>
+        <PrivilegesModal />
       </Stack>
 
       <TableContainer sx={{ position: 'relative', borderRadius: '1rem', overflow: 'unset', boxShadow: '0px 12px 24px 0px #919EAB1F' }}>
@@ -106,7 +106,7 @@ export default function UserView() {
               rowCount={tableData.length}
               numSelected={table.selected.length}
               onSort={table.onSort}
-              sx={{alignItems: 'center' }}
+              sx={{alignItems: 'center', textWrap: 'nowrap'}}
             />
 
             <TableBody>
@@ -119,28 +119,51 @@ export default function UserView() {
                   <TableRow
                     hover
                     key={row.id}
-                    onClick={() => console.log('soon')}
                   >
                     <TableCell>
                       <Box display="flex" flexDirection="row" alignItems="center" gap="1rem">
-                        <Avatar src={row.avatarUrl} />
                         <Box> 
-                          <Typography variant="subtitle2" noWrap>
-                            {row.username}
-                          </Typography>
+                          <PrivilegeUserModal privilege={row} />
                           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                            {row.email}
+                            {row.description}
                           </Typography>
                         </Box>
                       </Box>       
                     </TableCell>
                     {!isMobile && 
                     <>                              
-                      <TableCell align="right" sx={{width:'8.125rem'}}>{row.gold}</TableCell>
-                      <TableCell align="right" sx={{width:'8.125rem'}}>{row.xp}</TableCell>
+                     <TableCell align="center" sx={{padding: '0rem 2.8125rem', width: '8.75rem'}}>
+                        <Box display="flex" flexDirection="column" alignItems="center" gap="0.5rem">
+                         <Box display="flex">
+                            <ul style={{padding: '0'}}>
+                              <li>
+                                <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
+                                  <Typography variant="subtitle2">{row.gold} </Typography>
+                                  <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Gold</Typography>
+                                </Box>
+                              </li>
+                              <li>
+                                <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
+                                  <Typography variant="subtitle2">{row.xp} </Typography>
+                                  <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Exp</Typography>
+                                </Box>
+                              </li>
+
+                                <li>
+                                  <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
+                                    <Typography variant="subtitle2"> {row.requiredBadge ? 1: 0}</Typography>
+                                    <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badge</Typography>
+                                  </Box>
+                                </li>
+
+                            </ul>
+                          </Box>
+                        </Box>
+                      </TableCell>
+                      <TableCell align="center" sx={{width:'8.125rem'}}>{row.users.length}</TableCell>
                     </>}       
                     <TableCell align="right" sx={{width:'4.375rem'}}>
-                      <OptionsPopover user={row}/>
+                      <OptionsPopover privilege={row}/>
                     </TableCell>
                       
                   </TableRow>

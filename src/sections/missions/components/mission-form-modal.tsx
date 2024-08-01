@@ -11,6 +11,7 @@ import { useBoolean } from "src/hooks/use-boolean";
 import { useResponsive } from "src/hooks/use-responsive";
 import { useMission } from "src/hooks/use-mission-detail";
 import { useUsersContext } from "src/hooks/use-users-context";
+import { useBadgesContext } from 'src/hooks/use-badges-context';
 import { useMissionsContext } from "src/hooks/use-missions-context";
 
 import { RHFTextField } from "src/components/hook-form";
@@ -44,8 +45,7 @@ export default function MissionFormModal() {
   const { registerMission, updateMission } = useMissionsContext();
 
   const {data: missionData, isLoading, isError} = useMission(edit!);
-
-  const badgeData = badgesMock.map(badge => ({label: badge.name, value: badge.id}))
+  const {data: badgesList, isLoading: isLoadingBadges} = useBadgesContext();
 
   const theme = useTheme();
 
@@ -74,7 +74,7 @@ export default function MissionFormModal() {
     setValue('description', missionData.description) 
     setValue('xp', missionData.xp)
     setValue('gold', missionData.gold)
-    setValue('badges', missionData.badges)
+    setValue('badges', missionData.badges.map(badge => (badge.id)))
     setValue('participants', missionData.users.map(user => ({label: user.username, value: user.id, avatar: user.avatarUrl})))
 
     if (missionData.imageUrl){
@@ -86,10 +86,12 @@ export default function MissionFormModal() {
   }
 
   const onSubmit = handleSubmit(async(data) => {
+    console.log(data)
     if(edit){
       try{
         const mappedParticipants = data.participants?.map((user) => user.value)
-     
+        const mappedBadges = data.badges?.map((badge) => badge.value)
+
         const formData = new FormData();
         formData.append('title', data.title);
         formData.append('description', data.description);
@@ -98,7 +100,7 @@ export default function MissionFormModal() {
           formData.append('gold', data.gold.toString())
         }
         if(data.badges){
-          formData.append('badges', JSON.stringify(data.badges))
+          formData.append('badges', JSON.stringify(mappedBadges))
         }
         formData.append('participants', JSON.stringify(mappedParticipants));
         if(data.image && data.image instanceof File){
@@ -121,7 +123,7 @@ export default function MissionFormModal() {
         formData.append('gold', data.gold.toString())
       }
       if(data.badges){
-        formData.append('badges', JSON.stringify(data.badges))
+        formData.append('badges', JSON.stringify(data.badges?.map((badge) => badge)))
       }
       formData.append('participants', JSON.stringify(data.participants?.map((user) => user.value)));
 
@@ -219,7 +221,8 @@ export default function MissionFormModal() {
                     <Typography variant='subtitle2'>Recompensa</Typography>
                     <RHFTextField name='xp' type="number" label='Experiência'/>
                     <RHFTextField name='gold' type="number" label='Ouro'/>
-                    <RHFMultiSelect checkbox sx={{width:'100%'}} name='badges' label='Insignias' options={badgeData}/>
+                    {!isLoadingBadges && <RHFMultiSelect checkbox sx={{width:'100%'}} name='badges' label='Insignias'
+                    options={badgesList.badges.map(badge => ({label: badge.title, value: badge.id}))}/>}
                     <Typography variant='subtitle2'>Participantes</Typography>
                     {!isLoadingUser &&
                       <RHFAutocomplete
