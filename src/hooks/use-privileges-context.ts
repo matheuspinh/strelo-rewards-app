@@ -1,6 +1,7 @@
 'use client'
 
 import { useContext } from "react"
+
 import { PrivilegesContext } from "src/app/contexts/privileges/privileges-context"
 
 export const usePrivilegesContext = () => {

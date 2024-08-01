@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { Privilege } from "src/app/contexts/privileges/types";
-import { User } from "src/app/contexts/users/types";
+
 import axios, { endpoints } from "src/utils/axios";
+
+import { User } from "src/app/contexts/users/types";
+import { Privilege } from "src/app/contexts/privileges/types";
 
 export interface PrivilegeDetail extends Privilege {
   users: User[];

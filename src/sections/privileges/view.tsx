@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 
+import { Box } from '@mui/material';
 import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import { Box, Avatar } from '@mui/material';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
@@ -14,6 +14,9 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 
 import { useResponsive } from 'src/hooks/use-responsive';
+import { usePrivilegesContext } from 'src/hooks/use-privileges-context';
+
+import { Privilege } from 'src/app/contexts/privileges/types';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -25,10 +28,9 @@ import {
   TableHeadCustom,
   TableSelectedAction,
 } from 'src/components/table';
+
 import OptionsPopover from './components/options-popover';
 import PrivilegesModal from './components/privileges-form-modal';
-import { usePrivilegesContext } from 'src/hooks/use-privileges-context';
-import { Privilege } from 'src/app/contexts/privileges/types';
 import PrivilegeUserModal from './components/privilege-user-modal';
 
 type RowDataType = Privilege;

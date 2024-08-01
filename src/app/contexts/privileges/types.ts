@@ -1,4 +1,3 @@
-import { User } from "../users/types";
 
 export type Privilege ={
   id: string;

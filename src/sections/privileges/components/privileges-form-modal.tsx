@@ -1,27 +1,20 @@
 import * as Yup from 'yup'
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useEffect, useCallback } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Close } from "@mui/icons-material";
-import { Box, Button, Dialog, useTheme, IconButton, Typography, dialogClasses, InputAdornment, MenuItem } from "@mui/material";
+import { Box, Button, Dialog, useTheme, MenuItem, Typography, dialogClasses } from "@mui/material";
 
 import { useBoolean } from "src/hooks/use-boolean";
-import { useUser } from "src/hooks/use-user-detail";
-import { useUsersContext } from "src/hooks/use-users-context";
-
-import { User } from "src/app/contexts/users/types";
-
-import Iconify from "src/components/iconify";
-import { RHFTextField } from "src/components/hook-form";
-import FormProvider from "src/components/hook-form/form-provider";
-import { RHFUploadAvatar } from "src/components/hook-form/rhf-upload";
-import { RHFMultiSelect, RHFSelect } from 'src/components/hook-form/rhf-select';
-import { usePrivilegesContext } from 'src/hooks/use-privileges-context';
-import { useBadgesContext } from 'src/hooks/use-badges-context';
 import { usePrivilege } from 'src/hooks/use-privilege-detail';
-import { Privilege } from 'src/app/contexts/privileges/types';
+import { useBadgesContext } from 'src/hooks/use-badges-context';
+import { usePrivilegesContext } from 'src/hooks/use-privileges-context';
+
+import { RHFTextField } from "src/components/hook-form";
+import { RHFSelect } from 'src/components/hook-form/rhf-select';
+import FormProvider from "src/components/hook-form/form-provider";
 
 
 export default function PrivilegesModal() {
@@ -66,7 +59,7 @@ export default function PrivilegesModal() {
   const onSubmit = handleSubmit(async(data) => {
     if(edit){
       try{
-        await updatePrivilege({id: edit, data});
+        await updatePrivilege({id: edit, patchData: data});
         reset()
         password.onFalse();
         router.push('/dashboard/privileges')
@@ -81,7 +74,7 @@ export default function PrivilegesModal() {
       reset()
       password.onFalse();
       router.push('/dashboard/privileges')
-      return
+      
     } catch (error) {
       throw new Error(error)
     }
@@ -153,12 +146,11 @@ export default function PrivilegesModal() {
               <RHFTextField name='xp' label='Experiência' type='number'/>
               <RHFTextField name='gold' label='Ouro' type='number'/>
               <RHFSelect  name='requiredBadgeId' label='Conquista' sx={{width:'100%'}}>
-                {!isBadgesLoading && badges.badges.map((badge) => { return(
+                {!isBadgesLoading && badges.badges.map((badge) => (
                   <MenuItem value={badge.id} key={badge.id}>
                     {badge.title}
                   </MenuItem>
-                )
-                })}
+                ))}
               </RHFSelect>
               <Button fullWidth variant="contained" size="large" type='submit'>{edit? 'Editar Privilégio' : 'Criar Privilégio'}</Button>
             </Box>            

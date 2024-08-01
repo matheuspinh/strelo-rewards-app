@@ -1,6 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import axios, { endpoints } from "src/utils/axios";
+
 import { PrivilegesContext } from "./privileges-context";
 
 interface ProviderProps {
@@ -20,8 +22,8 @@ export function PrivilegesProvider({ children }: ProviderProps){
   })
 
   const { mutateAsync: registerPrivilege } = useMutation({
-    mutationFn: async (data: any) => {
-      const res = await axios.post(endpoints.privileges.register, data)
+    mutationFn: async (postData: any) => {
+      const res = await axios.post(endpoints.privileges.register, postData)
 
       return res.data;
     },
@@ -31,8 +33,8 @@ export function PrivilegesProvider({ children }: ProviderProps){
   })
 
   const { mutateAsync: updatePrivilege } = useMutation({
-    mutationFn: async ({id, data}:{id: string, data: any}) => {
-      const res = await axios.patch(`${endpoints.privileges.update}/${id}`, data)
+    mutationFn: async ({id, patchData}:{id: string, patchData: any}) => {
+      const res = await axios.patch(`${endpoints.privileges.update}/${id}`, patchData)
 
       return res.data;
     },

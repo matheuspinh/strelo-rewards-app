@@ -2,18 +2,18 @@ import { m } from "framer-motion";
 
 import { Close } from "@mui/icons-material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Box, Stack, Divider, MenuItem, IconButton, Typography } from "@mui/material";
+import { Box, Stack, MenuItem, IconButton } from "@mui/material";
 
 import { useRouter } from "src/routes/hooks";
 
 import { useBoolean } from "src/hooks/use-boolean";
-import { useUsersContext } from "src/hooks/use-users-context";
+import { usePrivilegesContext } from "src/hooks/use-privileges-context";
+
+import { Privilege } from "src/app/contexts/privileges/types";
 
 import { varHover } from "src/components/animate";
 import { usePopover } from "src/components/custom-popover";
 import CustomPopover from "src/components/custom-popover/custom-popover";
-import { Privilege } from "src/app/contexts/privileges/types";
-import { usePrivilegesContext } from "src/hooks/use-privileges-context";
 
 
 const OPTIONS = [

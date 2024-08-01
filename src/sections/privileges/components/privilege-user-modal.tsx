@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
-
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { Box, Dialog, useTheme, Typography, dialogClasses, TableContainer, Table, TableBody, TableRow, TableCell, Stack, Tooltip, IconButton, Avatar } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Box, Table, Stack, Dialog, Avatar, Tooltip, useTheme, TableRow, TableBody, TableCell, Typography, IconButton, dialogClasses, TableContainer } from "@mui/material";
 
 import { useBoolean } from "src/hooks/use-boolean";
+import { useResponsive } from "src/hooks/use-responsive";
 import { usePrivilege } from 'src/hooks/use-privilege-detail';
+
 import { Privilege } from 'src/app/contexts/privileges/types';
-import Scrollbar from "src/components/scrollbar/scrollbar";
+
+import Iconify from "src/components/iconify/iconify";
 import TableEmptyRows from "src/components/table/table-empty-rows";
 import { emptyRows, getComparator } from "src/components/table/utils";
-import { TableHeadCustom, TableSelectedAction, useTable } from "src/components/table";
-import Iconify from "src/components/iconify/iconify";
-import OptionsPopover from "./options-popover";
-import { useResponsive } from "src/hooks/use-responsive";
+import { useTable, TableHeadCustom, TableSelectedAction } from "src/components/table";
+
 
 interface RowDataType {
   id: string;
@@ -69,6 +69,7 @@ export default function PrivilegeUserModal({privilege}: {privilege:Privilege}) {
     } else {
       open.onFalse()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modal, isLoading])
   
   const dataFiltered = applyFilter({
