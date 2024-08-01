@@ -1,79 +1,115 @@
-'use client';
+import { useEffect, useState } from "react";
 
-import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from "next/navigation";
 
-import Table from '@mui/material/Table';
-import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
-import { Box, Avatar } from '@mui/material';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import TableContainer from '@mui/material/TableContainer';
+import { Box, Dialog, useTheme, Typography, dialogClasses, TableContainer, Table, TableBody, TableRow, TableCell, Stack, Tooltip, IconButton, Avatar } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-import { useResponsive } from 'src/hooks/use-responsive';
-
-import Iconify from 'src/components/iconify';
-import Scrollbar from 'src/components/scrollbar';
-import {
-  useTable,
-  emptyRows,
-  getComparator,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-} from 'src/components/table';
-import OptionsPopover from './components/options-popover';
-import PrivilegesModal from './components/privileges-form-modal';
-import { usePrivilegesContext } from 'src/hooks/use-privileges-context';
+import { useBoolean } from "src/hooks/use-boolean";
+import { usePrivilege } from 'src/hooks/use-privilege-detail';
 import { Privilege } from 'src/app/contexts/privileges/types';
-import PrivilegeUserModal from './components/privilege-user-modal';
+import Scrollbar from "src/components/scrollbar/scrollbar";
+import TableEmptyRows from "src/components/table/table-empty-rows";
+import { emptyRows, getComparator } from "src/components/table/utils";
+import { TableHeadCustom, TableSelectedAction, useTable } from "src/components/table";
+import Iconify from "src/components/iconify/iconify";
+import OptionsPopover from "./options-popover";
+import { useResponsive } from "src/hooks/use-responsive";
 
-type RowDataType = Privilege;
+interface RowDataType {
+  id: string;
+  username: string;
+  email: string;
+  avatarUrl: string;
+  gold: number;
+  xp: number;
+}
 
-// ----------------------------------------------------------------------
-
-export default function PrivilegesView() {
+export default function PrivilegeUserModal({privilege}: {privilege:Privilege}) {
   const table = useTable({
     defaultOrderBy: 'name',
     defaultRowsPerPage: 100
   });
-
+  const router = useRouter()
+  const searchParams = useSearchParams();
+  const open = useBoolean();
+  const modal = searchParams.get('privilege-users');
+  const user = searchParams.get('privilege')
   const isMobile = useResponsive('down', 'sm');
-
-  const TABLE_HEAD = isMobile ? [
-      { id: 'title', label: 'Privilégios', align: 'left' },
-      { id: 'id',  label: '', align: 'right' }
-    ]:[
-      { id: 'title', label: 'Privilégios', align: 'left' },
-      { id: 'requirements', label: 'Requisitos necessários', align: 'center' },
-      { id: 'earnedBY', label: 'Conquistaram', align: 'center' },
-      { id: 'id',  label: '', align: 'right' }
-    ]
-
-  const { data, isLoading } = usePrivilegesContext();
-
   const [tableData, setTableData] = useState<RowDataType[]>([]);
+  const {data: privilegeData, isLoading} = usePrivilege(user!);
+
+  const TABLE_HEAD = isMobile ?
+  [
+    { id: 'title', label: 'Nome e Título', align: 'left' },
+    { id: 'progress',  label: 'Progresso', align: 'right' }
+  ]:[
+    { id: 'title', label: 'Nome e Título', align: 'left' },
+    { id: 'progress',  label: 'Progresso', align: 'right' },
+    { id: 'id',  label: '', align: 'right' }
+  ]
+
+  const theme = useTheme();
+
+  const handleOpenModal = () =>{
+    router.push(`?privilege-users=open&privilege=${privilege.id}`, undefined)
+  }
+
+  const handleClose = () => {
+    router.push('/dashboard/privileges')
+  }
 
   useEffect(() => {
-    if(!isLoading ){
-      setTableData(data.privileges);
-    } 
-  }, [isLoading, data]);
-
-
+    if(modal === 'open'){
+      if(!isLoading && privilegeData){
+        setTableData(privilegeData.users)
+        console.log(privilegeData.users)
+      }
+      open.onTrue()
+    } else {
+      open.onFalse()
+    }
+  }, [modal, isLoading])
+  
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
   });
 
+
+  const renderButton = (
+    <Typography onClick={handleOpenModal} variant="subtitle2" sx={{cursor:'pointer'}}>{privilege.title}</Typography>
+  )
+
   return (
-    <Box marginTop="1.625rem" borderRadius="1rem" bgcolor="background.default">
+    <>
+    {renderButton}
+
+    <Dialog
+      open={open.value}
+      onClose={handleClose}
+      transitionDuration={{
+        enter: theme.transitions.duration.shortest,
+        exit: 0,
+      }}
+
+      PaperProps={{
+        sx: {
+          mt: 15,
+          overflow: 'unset',
+          height: 'fit-content',
+          width: '30rem',
+        },
+      }}
+      sx={{
+        [`& .${dialogClasses.container}`]: {
+          alignItems: 'flex-start',
+        },
+      }}>
+
+<Box marginTop="1.625rem" borderRadius="1rem" bgcolor="background.default">
       <Stack  direction="row" alignItems="center" gap="0.625rem" sx={{ p: 3 }}>
-        <Typography padding="0 15px" variant="h6">Privilégios ({!isLoading && data.privilegesCount})</Typography>
-        <PrivilegesModal />
+        <Typography padding="0 15px" variant="h6">Usuários ({!isLoading && tableData && tableData.length})</Typography>
       </Stack>
 
       <TableContainer sx={{ position: 'relative', borderRadius: '1rem', overflow: 'unset', boxShadow: '0px 12px 24px 0px #919EAB1F' }}>
@@ -95,7 +131,6 @@ export default function PrivilegesView() {
           }
         />
 
-        <Scrollbar>
           <Table size="medium">
             <TableHeadCustom
               order={table.order}
@@ -108,7 +143,13 @@ export default function PrivilegesView() {
             />
 
             <TableBody>
-              {dataFiltered
+              {dataFiltered.length === 0 ? 
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <Typography variant="subtitle2" sx={{color: 'text.secondary'}}>Nenhum usuário encontrado</Typography>
+                </TableCell>
+              </TableRow>
+              :dataFiltered
                 .slice(
                   table.page * table.rowsPerPage,
                   table.page * table.rowsPerPage + table.rowsPerPage
@@ -120,20 +161,20 @@ export default function PrivilegesView() {
                   >
                     <TableCell>
                       <Box display="flex" flexDirection="row" alignItems="center" gap="1rem">
+                        <Avatar src={row.avatarUrl} sx={{ width: 40, height: 40 }} />
                         <Box> 
-                          <PrivilegeUserModal privilege={row} />
+                          <Typography variant="subtitle2" > {row.username} </Typography>
                           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                            {row.description}
+                            {row.email}
                           </Typography>
                         </Box>
                       </Box>       
                     </TableCell>
-                    {!isMobile && 
                     <>                              
                      <TableCell align="center" sx={{padding: '0rem 2.8125rem', width: '8.75rem'}}>
                         <Box display="flex" flexDirection="column" alignItems="center" gap="0.5rem">
                          <Box display="flex">
-                            <ul style={{padding: '0'}}>
+                            <ul style={{ listStyleType: 'none' }}>
                               <li>
                                 <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
                                   <Typography variant="subtitle2">{row.gold} </Typography>
@@ -146,24 +187,16 @@ export default function PrivilegesView() {
                                   <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Exp</Typography>
                                 </Box>
                               </li>
-
-                                <li>
-                                  <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
-                                    <Typography variant="subtitle2"> {row.requiredBadge ? 1: 0}</Typography>
-                                    <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badge</Typography>
-                                  </Box>
-                                </li>
-
                             </ul>
                           </Box>
                         </Box>
                       </TableCell>
-                      <TableCell align="center" sx={{width:'8.125rem'}}>{row.users.length}</TableCell>
-                    </>}       
-                    <TableCell align="right" sx={{width:'4.375rem'}}>
-                      <OptionsPopover privilege={row}/>
-                    </TableCell>
-                      
+                      {!isMobile &&
+                      <TableCell align="right" sx={{width:'4.375rem'}}>
+                        <MoreVertIcon/>
+                      </TableCell>
+                      }      
+                    </>                      
                   </TableRow>
                 ))}
 
@@ -172,14 +205,14 @@ export default function PrivilegesView() {
               />
             </TableBody>
           </Table>
-        </Scrollbar>
       </TableContainer>
     </Box>
-  );
+      </Dialog>
+      </>
+  )
 }
 
-// ----------------------------------------------------------------------
-
+//------------------------------
 function applyFilter({
   inputData,
   comparator,

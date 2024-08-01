@@ -21,9 +21,10 @@ import { RHFMultiSelect, RHFSelect } from 'src/components/hook-form/rhf-select';
 import { usePrivilegesContext } from 'src/hooks/use-privileges-context';
 import { useBadgesContext } from 'src/hooks/use-badges-context';
 import { usePrivilege } from 'src/hooks/use-privilege-detail';
+import { Privilege } from 'src/app/contexts/privileges/types';
 
 
-export default function PrivilegesModal({privilege}: any) {
+export default function PrivilegesModal() {
   const router = useRouter()
   const searchParams = useSearchParams();
   const open = useBoolean();
