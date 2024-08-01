@@ -2,6 +2,8 @@
 
 import { useMemo, useEffect, useReducer, useCallback } from 'react';
 
+import { useRouter } from 'src/routes/hooks';
+
 import axios, { endpoints } from 'src/utils/axios';
 
 import { AuthContext } from './auth-context';
@@ -83,7 +85,7 @@ type Props = {
 
 export function AuthProvider({ children }: Props) {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const router = useRouter();
   const initialize = useCallback(async () => {
     try {
       const accessToken = sessionStorage.getItem(STORAGE_KEY);
@@ -183,11 +185,12 @@ export function AuthProvider({ children }: Props) {
 
   // LOGOUT
   const logout = useCallback(async () => {
-    setSession(null);
+    router.replace('/auth/jwt/login');
+    setSession(null);    
     dispatch({
       type: Types.LOGOUT,
     });
-  }, []);
+  }, [router]);
 
   // ----------------------------------------------------------------------
 

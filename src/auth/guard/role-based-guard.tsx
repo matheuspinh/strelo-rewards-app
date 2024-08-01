@@ -26,6 +26,9 @@ export default function RoleBasedGuard({ hasContent, roles, children, sx }: Role
   // Logic here to get current user role
   const router = useRouter();
   const { user } = useAuthContext();
+  if(!user){
+    return null;
+  }
   // const currentRole = 'user';
   const currentRole = user?.role; // admin;
 
