@@ -85,7 +85,7 @@ export function MissionsProvider({ children }: ProviderProps){
     deleteMission,
     updateMission,
     updateMissionCompletion
-  }), [data, registerMission, isLoading, isError, deleteMission, updateMission]);
+  }), [data, registerMission, isLoading, isError, deleteMission, updateMission, updateMissionCompletion]);
 
   return <MissionsContext.Provider value={contextValue}>{children}</MissionsContext.Provider>
 

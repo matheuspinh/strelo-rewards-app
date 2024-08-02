@@ -1,6 +1,6 @@
 import * as Yup from 'yup'
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useEffect, useCallback } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -12,8 +12,8 @@ import { useResponsive } from "src/hooks/use-responsive";
 import { useMission } from "src/hooks/use-mission-detail";
 import { useUsersContext } from "src/hooks/use-users-context";
 import { useMissionsContext } from "src/hooks/use-missions-context";
-import FormProvider from "src/components/hook-form/form-provider";
 
+import FormProvider from "src/components/hook-form/form-provider";
 import RHFAutocomplete from "src/components/hook-form/rhf-autocomplete";
 
 
@@ -55,7 +55,7 @@ export default function MissionCompletionModal() {
           await updateMissionCompletion({id: mission!, usersIds: data.participants.map((user: any) => user.value)});
           router.push('/dashboard/missions/')
         }
-        return
+        
       } catch (error) {
         console.log(error)
       }
@@ -79,7 +79,7 @@ export default function MissionCompletionModal() {
     }, [modal, mission, reset])
 
   const renderButton = (
-    <Button hidden={true}></Button>
+    <Button hidden />
   )
 
   return (
@@ -111,7 +111,7 @@ export default function MissionCompletionModal() {
               <Close fontSize="large" onClick={handleClose} />
             </Box>
             <FormProvider methods={methods} onSubmit={onSubmit}>
-              <Box display="flex" flexDirection={'column'} gap="1.5rem">
+              <Box display="flex" flexDirection="column" gap="1.5rem">
               <Typography variant='subtitle1'>Participantes</Typography>
                     {!isLoadingUser && missionData &&
                       <RHFAutocomplete

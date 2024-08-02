@@ -135,7 +135,7 @@ export default function MissionFormModal() {
       
     } catch (error) {
       console.log(error)
-      return
+      
     }
   })
 
