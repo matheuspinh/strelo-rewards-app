@@ -16,7 +16,7 @@ export function PrivilegesProvider({ children }: ProviderProps){
     queryKey: ["privileges"],
     queryFn: async () => {
       const res = await axios.get(endpoints.privileges.list)
-      console.log(res.data)
+
       return res.data;
     }
   })

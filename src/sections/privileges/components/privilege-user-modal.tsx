@@ -63,7 +63,6 @@ export default function PrivilegeUserModal({privilege}: {privilege:Privilege}) {
     if(modal === 'open'){
       if(!isLoading && privilegeData){
         setTableData(privilegeData.users)
-        console.log(privilegeData.users)
       }
       open.onTrue()
     } else {

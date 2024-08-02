@@ -119,7 +119,6 @@ export default function UserView() {
                   <TableRow
                     hover
                     key={row.id}
-                    onClick={() => console.log('soon')}
                   >
                     <TableCell>
                       <Box display="flex" flexDirection="row" alignItems="center" gap="1rem">
