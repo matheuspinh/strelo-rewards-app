@@ -18,6 +18,7 @@ import { useTable, emptyRows, getComparator, TableEmptyRows, TableHeadCustom, Ta
 
 import OptionsPopover from './components/options-popover';
 import MissionFormModal from './components/mission-form-modal';
+import MissionCompletionModal from './components/mission-completion-modal';
 
 
 //
@@ -108,6 +109,7 @@ export default function MissionViews() {
     <Stack  direction="row" alignItems="center" gap="0.625rem" sx={{ p: 3 }}>
       <Typography padding='0 15px' variant="h6">Missões ({!isLoading && data.missionCount})</Typography>
       <MissionFormModal />
+      <MissionCompletionModal/>
     </Stack>  
       <TableContainer sx={{ borderRadius:'1rem', position: 'relative', overflow: 'unset', boxShadow: '0px 12px 24px 0px #919EAB1F' }}>
         <TableSelectedAction

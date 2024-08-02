@@ -43,7 +43,6 @@ export default function ProfileCover({ name, role, coverUrl }: any) {
 
   const onSubmit = handleSubmit(async(data)=> {
     try {
-      console.log('called')
       const formData = new FormData()
       if(data.image && data.image instanceof File){
         formData.append('image', data.image)

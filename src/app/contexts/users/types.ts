@@ -9,6 +9,7 @@ type Mission = {
   xp: number
   gold: number
   completedByIDs: string[]
+  completedBy: User[]
   usersIDs: string[]
   companyId: string
   badgesIDs: string[]

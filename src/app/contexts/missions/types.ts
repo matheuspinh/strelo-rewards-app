@@ -14,6 +14,7 @@ export type Mission = {
   badgesIDs: string[]
   users: User[]
   badges: Badge[]
+  completedBy: User[]
 }
 
 export type MissionsList = {
@@ -28,4 +29,5 @@ export type MissionsContextType= {
   registerMission: (formData: any) => Promise<any>;
   deleteMission: (id: string) => Promise<void>;
   updateMission: ({id, formData}: {id: string, formData: any}) => Promise<void>;
+  updateMissionCompletion: ({id, usersIds}: {id: string, usersIds: string[]}) => Promise<void>;
 }

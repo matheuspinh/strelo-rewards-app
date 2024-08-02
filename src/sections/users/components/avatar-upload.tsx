@@ -43,7 +43,7 @@ export default function OneView() {
     [setValue]
   );
 
-  const onSubmit = handleSubmit(async(data) => console.log(data))
+  const onSubmit = handleSubmit(async(data) => {})
 
 
   return (
