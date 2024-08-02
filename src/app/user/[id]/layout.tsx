@@ -1,6 +1,8 @@
 'use client';
 
 import { AuthGuard } from 'src/auth/guard';
+import UserProfileLayout from 'src/layouts/user-profile';
+import { UsersProvider } from 'src/app/contexts/users/users-provider';
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -10,7 +12,9 @@ type Props = {
 export default function Layout({ children }: Props) {
   return (
     <AuthGuard>
-      {children}
+      <UsersProvider>
+        <UserProfileLayout>{children}</UserProfileLayout>
+      </UsersProvider>
     </AuthGuard>
   );
 }

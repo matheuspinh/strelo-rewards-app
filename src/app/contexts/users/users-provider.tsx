@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import axios, {endpoints} from "src/utils/axios";
 
+import { useAuthContext } from "src/auth/hooks";
+
 import { UsersContext } from "./users-context";
 
 interface ProviderProps {
@@ -11,9 +13,12 @@ interface ProviderProps {
 
 export function UsersProvider({ children }: ProviderProps){
   const queryClient = useQueryClient();
+  const {user} = useAuthContext();
 
+  
   const {data, isLoading, isError} = useQuery({
     queryKey: ["users"],
+    enabled: user?.role === 'admin',
     queryFn: async () => {
       const res = await axios.get(endpoints.users.list);
       return res.data;

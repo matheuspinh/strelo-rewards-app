@@ -1,4 +1,5 @@
 import { User } from "../users/types"
+import { Badge } from "../badges/types"
 
 export type Mission = {
   id: string,
@@ -12,7 +13,8 @@ export type Mission = {
   companyId: string
   badgesIDs: string[]
   users: User[]
-  badges: any[]
+  badges: Badge[]
+  completedBy: User[]
 }
 
 export type MissionsList = {
@@ -27,4 +29,5 @@ export type MissionsContextType= {
   registerMission: (formData: any) => Promise<any>;
   deleteMission: (id: string) => Promise<void>;
   updateMission: ({id, formData}: {id: string, formData: any}) => Promise<void>;
+  updateMissionCompletion: ({id, usersIds}: {id: string, usersIds: string[]}) => Promise<void>;
 }

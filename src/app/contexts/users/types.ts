@@ -1,3 +1,22 @@
+import { Badge } from "../badges/types";
+import { Privilege } from "../privileges/types";
+
+type Mission = {
+  id: string,
+  title: string
+  description: string
+  imageUrl: string | null
+  xp: number
+  gold: number
+  completedByIDs: string[]
+  completedBy: User[]
+  usersIDs: string[]
+  companyId: string
+  badgesIDs: string[]
+  users: User[]
+  badges: Badge[]
+}
+
 export type User = {
   id: string;
   username: string;
@@ -9,6 +28,9 @@ export type User = {
   updatedAt: string;
   xp: number;
   gold: number;
+  badges: Badge[];
+  missions: Mission[];
+  privileges: Privilege[];
 }
 
 export type UsersList = {

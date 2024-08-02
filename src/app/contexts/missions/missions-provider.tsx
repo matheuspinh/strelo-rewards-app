@@ -62,14 +62,30 @@ export function MissionsProvider({ children }: ProviderProps){
     }
   })
 
+  const {mutateAsync: updateMissionCompletion} = useMutation({
+    mutationFn: async ({id, usersIds} : {id: string, usersIds: string[]}) => {
+      const res = await axios.patch(`${endpoints.missions.complete}/${id}`, {usersIds})
+      return res.data
+    },
+    onSuccess: (dataRes, variables) => {
+      const queryKeys = [
+        ['missions'],
+        ['users'],
+        ['mission', variables.id]
+      ]
+      queryKeys.forEach(key => queryClient.invalidateQueries({queryKey: key}))
+    }
+  })
+
   const contextValue = useMemo(() => ({
     data,
     registerMission,
     isLoading,
     isError,
     deleteMission,
-    updateMission
-  }), [data, registerMission, isLoading, isError, deleteMission, updateMission]);
+    updateMission,
+    updateMissionCompletion
+  }), [data, registerMission, isLoading, isError, deleteMission, updateMission, updateMissionCompletion]);
 
   return <MissionsContext.Provider value={contextValue}>{children}</MissionsContext.Provider>
 

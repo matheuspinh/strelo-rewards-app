@@ -1,20 +1,11 @@
-'use client';
+import { UserProfileView } from 'src/sections/user-profile/view';
 
-import { Box, Container, Typography } from "@mui/material";
+// ----------------------------------------------------------------------
 
-export default function Page() {
+export const metadata = {
+  title: 'Perfil de Usuário',
+};
 
-  return (
-    <Container maxWidth='xl'>
-      <Typography variant="h4"> USER PROFILE</Typography>
-      <Box
-        sx={{
-          mt: 5,
-          width: 1,
-          height: 320,
-          borderRadius: 2,
-        }}
-      />
-    </Container>
-  );
+export default function UserProfilePage() {
+  return <UserProfileView />;
 }
