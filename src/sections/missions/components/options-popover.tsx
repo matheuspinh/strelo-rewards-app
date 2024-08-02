@@ -47,6 +47,10 @@ export default function OptionsPopover({mission}: {mission:Mission}) {
     handleClosePopover()
   }
   
+  const handleComplete = () => {
+    router.push(`?mission-completion=open&mission=${mission.id}`, undefined)
+    handleClosePopover()
+  }
 
   const handleClickItem = (path: string) => {
     popover.onClose();
@@ -78,6 +82,9 @@ export default function OptionsPopover({mission}: {mission:Mission}) {
           
             <MenuItem onClick={handleEdit}>
               Editar
+            </MenuItem>
+            <MenuItem onClick={handleComplete}>
+              Usuários que completaram
             </MenuItem>
   
           {confirmDelete.value ? 

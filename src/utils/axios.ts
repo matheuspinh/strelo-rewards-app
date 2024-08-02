@@ -46,7 +46,8 @@ export const endpoints = {
     register: '/api/missions',
     delete: '/api/missions',
     detail: '/api/mission',
-    update: '/api/mission'
+    update: '/api/mission',
+    complete: '/api/mission/complete'
   },
   badges:{
     list: '/api/badges',

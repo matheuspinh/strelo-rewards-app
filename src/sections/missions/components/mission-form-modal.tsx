@@ -86,12 +86,10 @@ export default function MissionFormModal() {
   }
 
   const onSubmit = handleSubmit(async(data) => {
-    console.log(data)
     if(edit){
-      try{
+      try{   
         const mappedParticipants = data.participants?.map((user) => user.value)
         const mappedBadges = data.badges?.map((badge) => badge.value)
-
         const formData = new FormData();
         formData.append('title', data.title);
         formData.append('description', data.description);
@@ -100,7 +98,7 @@ export default function MissionFormModal() {
           formData.append('gold', data.gold.toString())
         }
         if(data.badges){
-          formData.append('badges', JSON.stringify(mappedBadges))
+          formData.append('badges', JSON.stringify(data.badges))
         }
         formData.append('participants', JSON.stringify(mappedParticipants));
         if(data.image && data.image instanceof File){
@@ -111,6 +109,7 @@ export default function MissionFormModal() {
         return
       } catch (error) {
         console.log(error)
+        return
       }
     }
     try{
@@ -136,6 +135,7 @@ export default function MissionFormModal() {
       
     } catch (error) {
       console.log(error)
+      return
     }
   })
 
