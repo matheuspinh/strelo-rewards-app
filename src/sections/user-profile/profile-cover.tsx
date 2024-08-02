@@ -16,6 +16,7 @@ import { bgGradient } from 'src/theme/css';
 
 import FormProvider from 'src/components/hook-form/form-provider';
 import { RHFUploadAvatar } from 'src/components/hook-form/rhf-upload';
+
 import UserFormModal from './components/user-form-modal';
 
 // ----------------------------------------------------------------------

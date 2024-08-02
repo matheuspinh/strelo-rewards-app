@@ -2,7 +2,7 @@ import * as Yup from 'yup'
 import { useForm } from "react-hook-form";
 import { useEffect, useCallback } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import { Close } from "@mui/icons-material";
 import { Box, Button, Dialog, useTheme, IconButton, Typography, dialogClasses, InputAdornment } from "@mui/material";
@@ -10,8 +10,6 @@ import { Box, Button, Dialog, useTheme, IconButton, Typography, dialogClasses, I
 import { useBoolean } from "src/hooks/use-boolean";
 import { useUser } from "src/hooks/use-user-detail";
 import { useUsersContext } from "src/hooks/use-users-context";
-
-import { User } from "src/app/contexts/users/types";
 
 import Iconify from "src/components/iconify";
 import { RHFTextField } from "src/components/hook-form";
@@ -74,7 +72,7 @@ export default function UserFormModal() {
         reset()
         password.onFalse();
         router.push(`/user/${user}`)
-       return
+       
       } catch (error) {
         if (error.message){
           if(error.message.includes('E-mail')){
@@ -124,8 +122,8 @@ export default function UserFormModal() {
 
   const renderButton = (
     <Iconify 
-      alignSelf={'center'}
-      icon={'line-md:pencil'}
+      alignSelf="center"
+      icon="line-md:pencil"
       onClick={handleOpenModal}
       sx={{
         cursor: 'pointer',

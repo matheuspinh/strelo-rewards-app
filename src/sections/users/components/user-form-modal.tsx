@@ -11,8 +11,6 @@ import { useBoolean } from "src/hooks/use-boolean";
 import { useUser } from "src/hooks/use-user-detail";
 import { useUsersContext } from "src/hooks/use-users-context";
 
-import { User } from "src/app/contexts/users/types";
-
 import Iconify from "src/components/iconify";
 import { RHFTextField } from "src/components/hook-form";
 import FormProvider from "src/components/hook-form/form-provider";
