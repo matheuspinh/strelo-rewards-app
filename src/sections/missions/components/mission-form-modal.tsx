@@ -207,7 +207,7 @@ export default function MissionFormModal() {
         
           <Box padding="2rem 1.2rem" overflow="auto" sx={{scrollbarWidth:'none'}}>
             <Box display="flex"  marginBottom="3rem" flexDirection="row" alignItems="center" justifyContent="space-between">
-              <Typography  variant="h4">Nova Missão</Typography>
+              <Typography  variant="h4">{edit ? 'Editar Missão' : 'Nova Missão'}</Typography>
               <Close fontSize="large" onClick={handleClose} />
             </Box>
             <FormProvider methods={methods} onSubmit={onSubmit}>

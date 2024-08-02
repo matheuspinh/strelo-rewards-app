@@ -37,13 +37,7 @@ export default function Header({ onOpenNav }: Props) {
 
   const renderContent = (
     <>
-      {lgUp && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
-
-      {!lgUp && (
-        <IconButton onClick={onOpenNav}>
-          <SvgColor src="/assets/icons/navbar/ic_menu_item.svg" />
-        </IconButton>
-      )}
+      {<Logo disabledLink={true} sx={{ mr: 2.5 }} />}   
 
       <Stack
         flexGrow={1}
@@ -83,6 +77,7 @@ export default function Header({ onOpenNav }: Props) {
             width: `calc(100% - ${NAV.W_MINI + 1}px)`,
           }),
         }),
+        width: '100%',
       }}
       
     >

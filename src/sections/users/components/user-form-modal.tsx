@@ -20,7 +20,7 @@ import { RHFUploadAvatar } from "src/components/hook-form/rhf-upload";
 
 
 
-export default function UserFormModal({user}: {user?: User}) {
+export default function UserFormModal() {
   const router = useRouter()
   const searchParams = useSearchParams();
   const open = useBoolean();
@@ -30,7 +30,7 @@ export default function UserFormModal({user}: {user?: User}) {
 
   const {registerUser, updateUser} = useUsersContext();
 
-  const {data: userData, isLoading, isError} = useUser(edit!);
+  const {data: userData, isLoading} = useUser(edit!);
 
   const theme = useTheme();
 
@@ -142,7 +142,7 @@ export default function UserFormModal({user}: {user?: User}) {
     }, [modal, edit, reset])
 
   const renderButton = (
-    <Button onClick={handleOpenModal} variant="outlined" color='primary'>Novo Usuário</Button>
+    <Button onClick={handleOpenModal} variant="outlined" color='primary'>{edit ? 'Editar Usuário' : 'Novo Usuário'}</Button>
   )
 
   return (
@@ -193,7 +193,7 @@ export default function UserFormModal({user}: {user?: User}) {
             </InputAdornment>
           ),
         }}/>
-              <Button fullWidth variant="contained" size="large" type='submit'>Criar Usuário</Button>
+              <Button fullWidth variant="contained" size="large" type='submit'>{edit ? 'Editar Usuário' : 'Criar Usuário'}</Button>
             </Box>            
           </Box>
           </FormProvider>
