@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 import Table from '@mui/material/Table';
@@ -121,6 +122,7 @@ export default function UserView() {
                     key={row.id}
                   >
                     <TableCell>
+                      <Link style={{textDecoration:'none', color:'black'}} href={`/dashboard/users/${row.id}`}>
                       <Box display="flex" flexDirection="row" alignItems="center" gap="1rem">
                         <Avatar src={row.avatarUrl} />
                         <Box> 
@@ -131,7 +133,8 @@ export default function UserView() {
                             {row.email}
                           </Typography>
                         </Box>
-                      </Box>       
+                      </Box>
+                      </Link>       
                     </TableCell>
                     {!isMobile && 
                     <>                              
