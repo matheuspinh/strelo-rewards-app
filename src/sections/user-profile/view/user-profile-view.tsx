@@ -58,9 +58,9 @@ export default function UserProfileView() {
         }}
       >
         <ProfileCover
-          role={user?.email}
-          name={user?.username}
-          avatarUrl={user?.avatarUrl}
+          role={userData?.email}
+          name={userData?.username}
+          avatarUrl={userData?.avatarUrl}
           coverUrl={_userAbout.coverUrl}
         />
       </Card>

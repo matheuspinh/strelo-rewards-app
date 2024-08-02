@@ -17,6 +17,8 @@ import { bgGradient } from 'src/theme/css';
 import FormProvider from 'src/components/hook-form/form-provider';
 import { RHFUploadAvatar } from 'src/components/hook-form/rhf-upload';
 
+import UserFormModal from './components/user-form-modal';
+
 // ----------------------------------------------------------------------
 
 export default function ProfileCover({ name, role, coverUrl }: any) {
@@ -103,26 +105,31 @@ export default function ProfileCover({ name, role, coverUrl }: any) {
           />
         </FormProvider>
 
-
-        <ListItemText
-          sx={{
-            mt: 3,
-            ml: { md: 3 },
-            textAlign: { xs: 'center', md: 'unset' },
-          }}
-          primary={name}
-          secondary={role}
-          primaryTypographyProps={{
-            typography: 'h4',
-          }}
-          secondaryTypographyProps={{
-            mt: 0.5,
-            color: 'inherit',
-            component: 'span',
-            typography: 'body2',
-            sx: { opacity: 0.48 },
-          }}
-        />
+        <Stack
+          spacing={1}
+          direction={{lg:'row', md: 'column' }}
+            >
+          <ListItemText
+            sx={{
+              mt: 3,
+              ml: { md: 3 },
+              textAlign: { xs: 'center', md: 'unset' },
+            }}
+            primary={name}
+            secondary={role}
+            primaryTypographyProps={{
+              typography: 'h4',
+            }}
+            secondaryTypographyProps={{
+              mt: 0.5,
+              color: 'inherit',
+              component: 'span',
+              typography: 'body2',
+              sx: { opacity: 0.48 },
+            }}
+          />
+          <UserFormModal />
+        </Stack>
       </Stack>
     </Box>
   );
