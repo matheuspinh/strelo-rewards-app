@@ -84,8 +84,6 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-
-
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem
