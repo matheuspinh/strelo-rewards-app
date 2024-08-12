@@ -33,15 +33,15 @@ export default function ProfileCover({ name, role, coverUrl }: any) {
   const { data: userData, isLoading } = useUser(user!);
   const { updateUser } = useUsersContext();
 
+  //TIP: Forma adequada de pré preencher os campos do formulário e evitar renderizações desnecessárias
   const methods = useForm({
+    values: {
+      image: userData?.avatarUrl || null
+    },
     resolver: yupResolver(userFormSchema)
   })
 
-  const { setValue, handleSubmit, reset, setError } = methods;
-
-  if(!isLoading && userData){
-    setValue('image', userData.avatarUrl)
-  }
+  const { setValue, handleSubmit } = methods;
 
   const onSubmit = handleSubmit(async(data)=> {
     try {

@@ -42,22 +42,16 @@ export default function UserFormModal() {
   })
 
   const methods = useForm({
+    values: {
+      username: userData?.username || '',
+      email: userData?.email || '',
+      password: '',
+      image: userData?.avatarUrl || null
+    },
     resolver: yupResolver(userFormSchema)
   })
 
   const { setValue, handleSubmit, reset, setError } = methods;
-
-  if(!isLoading && userData){
-    setValue('username', userData.username)
-    setValue('email', userData.email) 
-
-    if (userData.avatarUrl){
-      const file = {
-        preview: userData.avatarUrl
-      }
-      setValue('image', file, { shouldValidate: true })
-    }
-  }
 
   const onSubmit = handleSubmit(async(data) => {
       try{
