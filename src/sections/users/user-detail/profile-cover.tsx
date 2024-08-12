@@ -33,7 +33,7 @@ export default function ProfileCover({ name, role, coverUrl }: any) {
   const { data: userData, isLoading } = useUser(user!);
   const { updateUser } = useUsersContext();
 
-  //TIP: Forma adequada de pré preencher os campos do formulário e evitar renderizações desnecessárias
+  // TIP: Forma adequada de pré preencher os campos do formulário e evitar renderizações desnecessárias
   const methods = useForm({
     values: {
       image: userData?.avatarUrl || null
