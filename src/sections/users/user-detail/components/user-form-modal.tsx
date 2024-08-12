@@ -71,7 +71,7 @@ export default function UserFormModal() {
         await updateUser({id: edit!, formData});
         reset()
         password.onFalse();
-        router.push(`/user/${user}`)
+        router.push(pathname)
        
       } catch (error) {
         if (error.message){
@@ -105,7 +105,7 @@ export default function UserFormModal() {
   const handleClose = () => {
     reset()
     password.onFalse();
-    router.push(`/user/${user}`)
+    router.push(pathname)
   }
 
   useEffect(() => {
