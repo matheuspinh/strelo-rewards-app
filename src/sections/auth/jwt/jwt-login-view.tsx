@@ -45,7 +45,7 @@ export default function JwtLoginView() {
     password: Yup.string().required('Senha é obrigatória'),
   });
 
-  //TIP Setting the default values for the form helps when calling the reset method
+  // TIP Setting the default values for the form helps when calling the reset method
   const methods = useForm({
     resolver: yupResolver(LoginSchema),
     defaultValues: {
