@@ -41,12 +41,17 @@ export default function JwtLoginView() {
   const password = useBoolean();
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required'),
+    email: Yup.string().required('Email é obrigatório').email('O email deve ser válido'),
+    password: Yup.string().required('Senha é obrigatória'),
   });
 
+  //TIP Setting the default values for the form helps when calling the reset method
   const methods = useForm({
     resolver: yupResolver(LoginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    }
   });
 
   const {
