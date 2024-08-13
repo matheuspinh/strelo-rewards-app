@@ -54,36 +54,25 @@ export default function MissionFormModal() {
     title: Yup.string().required('Título é obrigatório'),
     description: Yup.string().required('Descreva a missão.'),
     xp: Yup.number().min(1, 'Uma missão deve ter experiência como recompensa').required('Determine a experiência concedida.'),
-    gold: Yup.number().optional(),
+    gold: Yup.number().min(1, 'Uma missão deve ter ouro como recompensa'),
     badges: Yup.array().optional(),
     participants: Yup.array().min(1, 'Adicione ao menos um participante.')
   })
 
   const methods = useForm({
     resolver: yupResolver(userFormSchema),
-    defaultValues: {
-      participants: [],
-      badges: []
+    values: {
+      title: missionData?.title || '',
+      description: missionData?.description || '',
+      xp: missionData?.xp || 0,
+      gold: missionData?.gold || 0,
+      badges: missionData?.badges.map(badge => (badge.id)) || [],
+      participants: missionData?.users.map(user => ({label: user.username, value: user.id, avatar: user.avatarUrl})) || [],
+      image: missionData?.imageUrl || null
     }
   })
 
   const { setValue, handleSubmit, reset } = methods;
-
-  if(!isLoading && missionData){
-    setValue('title', missionData.title)
-    setValue('description', missionData.description) 
-    setValue('xp', missionData.xp)
-    setValue('gold', missionData.gold)
-    setValue('badges', missionData.badges.map(badge => (badge.id)))
-    setValue('participants', missionData.users.map(user => ({label: user.username, value: user.id, avatar: user.avatarUrl})))
-
-    if (missionData.imageUrl){
-      const file = {
-        preview: missionData.imageUrl
-      }
-      setValue('image', file, { shouldValidate: true })
-    }
-  }
 
   const onSubmit = handleSubmit(async(data) => {
     if(edit){
