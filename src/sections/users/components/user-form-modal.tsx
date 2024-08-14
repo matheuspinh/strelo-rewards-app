@@ -140,7 +140,7 @@ export default function UserFormModal() {
     }, [modal, edit, reset])
 
   const renderButton = (
-    <Button onClick={handleOpenModal} variant="outlined" color='primary'>{edit ? 'Editar Usuário' : 'Novo Usuário'}</Button>
+    <Button onClick={handleOpenModal} variant="outlined" color='primary'>Novo Usuário</Button>
   )
 
   return (
@@ -169,7 +169,7 @@ export default function UserFormModal() {
 
         <Box height="40rem" width="23.4375rem" padding="2rem 1.2rem">
           <Box display="flex"  marginBottom="3rem" flexDirection="row" alignItems="center" justifyContent="space-between">
-            <Typography  variant="h4">Novo Usuário</Typography>
+            <Typography  variant="h4">{edit ? 'Editar Usuário' : 'Novo Usuário'}</Typography>
             <Close fontSize="large" onClick={handleClose} />
           </Box>
           <FormProvider methods={methods} onSubmit={onSubmit}>
