@@ -1,5 +1,6 @@
 import * as Yup from 'yup'
 import { useEffect } from "react";
+import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,7 +16,6 @@ import { useMissionsContext } from "src/hooks/use-missions-context";
 
 import FormProvider from "src/components/hook-form/form-provider";
 import RHFAutocomplete from "src/components/hook-form/rhf-autocomplete";
-import { toast } from 'react-toastify';
 
 
 export default function MissionCompletionModal() {
@@ -57,11 +57,11 @@ export default function MissionCompletionModal() {
           router.push('/dashboard/missions/')
         }
         toast.success('Missão completada com sucesso!')
-        return
+        
       } catch (error) {
         toast.error('Erro ao completar missão')
         console.log(error)
-        return
+        
       }
   })
 

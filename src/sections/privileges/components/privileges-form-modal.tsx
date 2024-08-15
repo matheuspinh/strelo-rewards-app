@@ -1,5 +1,6 @@
 import * as Yup from 'yup'
 import { useEffect } from "react";
+import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,7 +16,6 @@ import { usePrivilegesContext } from 'src/hooks/use-privileges-context';
 import { RHFTextField } from "src/components/hook-form";
 import { RHFSelect } from 'src/components/hook-form/rhf-select';
 import FormProvider from "src/components/hook-form/form-provider";
-import { toast } from 'react-toastify';
 
 
 export default function PrivilegesModal() {
@@ -78,10 +78,10 @@ export default function PrivilegesModal() {
       password.onFalse();
       router.push('/dashboard/privileges')
       toast.success('Privilégio criado com sucesso!')
-      return
+      
     } catch (error) {
       toast.error('Erro ao criar privilégio')
-      return
+      
     }
   })
 

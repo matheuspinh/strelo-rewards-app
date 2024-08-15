@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import { useEffect, useCallback } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -19,7 +20,6 @@ import { RHFUpload } from "src/components/hook-form/rhf-upload";
 import FormProvider from "src/components/hook-form/form-provider";
 import { RHFMultiSelect } from "src/components/hook-form/rhf-select";
 import RHFAutocomplete from "src/components/hook-form/rhf-autocomplete";
-import { toast } from 'react-toastify';
 
 export const badgesMock = [
   { id: '1', name: 'Badge 1'},
@@ -135,11 +135,11 @@ export default function MissionFormModal() {
       await registerMission(formData);
       router.push('/dashboard/missions/')
       toast.success('Missão criada com sucesso')
-      return
+      
     } catch (error) {
       toast.error('Erro ao criar missão')
       console.log(error)
-      return
+      
     }
   })
 

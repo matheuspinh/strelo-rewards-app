@@ -1,5 +1,8 @@
 'use client';
 
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 import DashboardLayout from 'src/layouts/dashboard';
 import { AuthGuard, RoleBasedGuard } from 'src/auth/guard';
 
@@ -7,8 +10,6 @@ import { UsersProvider } from '../contexts/users/users-provider';
 import { BadgesProvider } from '../contexts/badges/badges-provider';
 import { MissionsProvider } from '../contexts/missions/missions-provider';
 import { PrivilegesProvider } from '../contexts/privileges/privileges-provider';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 // ----------------------------------------------------------------------
 

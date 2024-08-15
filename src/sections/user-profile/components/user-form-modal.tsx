@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import { useEffect, useCallback } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -15,7 +16,6 @@ import Iconify from "src/components/iconify";
 import { RHFTextField } from "src/components/hook-form";
 import FormProvider from "src/components/hook-form/form-provider";
 import { RHFUploadAvatar } from "src/components/hook-form/rhf-upload";
-import { toast } from 'react-toastify';
 
 
 
@@ -81,7 +81,7 @@ export default function UserFormModal() {
             setError('email', {message: 'E-mail já cadastrado'})
         }
         toast.error('Erro ao editar usuário')
-        return
+        
       }
     }
   })
