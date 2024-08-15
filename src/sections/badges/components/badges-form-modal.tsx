@@ -15,6 +15,7 @@ import { useBadgesContext } from 'src/hooks/use-badges-context';
 import { RHFTextField } from "src/components/hook-form";
 import FormProvider from "src/components/hook-form/form-provider";
 import { RHFUploadAvatar } from "src/components/hook-form/rhf-upload";
+import { toast } from 'react-toastify';
 
 export const badgesMock = [
   { id: '1', name: 'Badge 1'},
@@ -80,9 +81,12 @@ export default function BadgesFormModal() {
 
         await updateBadge({id: edit, formData});
         router.push('/dashboard/badges/')
+        toast.success('Conquista atualizada com sucesso!')
         return
       } catch (error) {
         console.log(error)
+        toast.error('Erro ao atualizar conquista')
+        return
       }
     }
     try{
@@ -96,9 +100,12 @@ export default function BadgesFormModal() {
 
       await registerBadge(formData);
       router.push('/dashboard/badges/')
-      
+      toast.success('Conquista criada com sucesso!')
+      return      
     } catch (error) {
       console.log(error)
+      toast.error('Erro ao criar conquista')
+      return
     }
   })
 

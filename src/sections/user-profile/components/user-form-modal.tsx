@@ -15,6 +15,7 @@ import Iconify from "src/components/iconify";
 import { RHFTextField } from "src/components/hook-form";
 import FormProvider from "src/components/hook-form/form-provider";
 import { RHFUploadAvatar } from "src/components/hook-form/rhf-upload";
+import { toast } from 'react-toastify';
 
 
 
@@ -70,6 +71,7 @@ export default function UserFormModal() {
         }
         await updateUser({id: edit!, formData});
         reset()
+        toast.success('Usuário editado com sucesso')
         password.onFalse();
         router.push(`/user/${user}`)
        
@@ -78,6 +80,8 @@ export default function UserFormModal() {
           if(error.message.includes('E-mail')){
             setError('email', {message: 'E-mail já cadastrado'})
         }
+        toast.error('Erro ao editar usuário')
+        return
       }
     }
   })

@@ -15,6 +15,7 @@ import { usePrivilegesContext } from 'src/hooks/use-privileges-context';
 import { RHFTextField } from "src/components/hook-form";
 import { RHFSelect } from 'src/components/hook-form/rhf-select';
 import FormProvider from "src/components/hook-form/form-provider";
+import { toast } from 'react-toastify';
 
 
 export default function PrivilegesModal() {
@@ -63,9 +64,11 @@ export default function PrivilegesModal() {
         reset()
         password.onFalse();
         router.push('/dashboard/privileges')
+        toast.success('Privilégio atualizado com sucesso!')
        return
       } catch (error) {
-        throw new Error(error)
+        toast.error('Erro ao atualizar privilégio')
+        return
       }
     }
 
@@ -74,9 +77,11 @@ export default function PrivilegesModal() {
       reset()
       password.onFalse();
       router.push('/dashboard/privileges')
-      
+      toast.success('Privilégio criado com sucesso!')
+      return
     } catch (error) {
-      throw new Error(error)
+      toast.error('Erro ao criar privilégio')
+      return
     }
   })
 

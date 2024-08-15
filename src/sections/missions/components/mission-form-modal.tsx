@@ -19,6 +19,7 @@ import { RHFUpload } from "src/components/hook-form/rhf-upload";
 import FormProvider from "src/components/hook-form/form-provider";
 import { RHFMultiSelect } from "src/components/hook-form/rhf-select";
 import RHFAutocomplete from "src/components/hook-form/rhf-autocomplete";
+import { toast } from 'react-toastify';
 
 export const badgesMock = [
   { id: '1', name: 'Badge 1'},
@@ -54,7 +55,7 @@ export default function MissionFormModal() {
     title: Yup.string().required('Título é obrigatório'),
     description: Yup.string().required('Descreva a missão.'),
     xp: Yup.number().min(1, 'Uma missão deve ter experiência como recompensa').required('Determine a experiência concedida.'),
-    gold: Yup.number().optional(),
+    gold: Yup.number().min(1),
     badges: Yup.array().optional(),
     participants: Yup.array().min(1, 'Adicione ao menos um participante.')
   })
@@ -106,9 +107,10 @@ export default function MissionFormModal() {
         }
         await updateMission({id: edit, formData});
         router.push('/dashboard/missions/')
+        toast.success('Missão atualizada com sucesso')
         return
       } catch (error) {
-        console.log(error)
+        toast.error('Erro ao atualizar missão')
         return
       }
     }
@@ -132,10 +134,12 @@ export default function MissionFormModal() {
 
       await registerMission(formData);
       router.push('/dashboard/missions/')
-      
+      toast.success('Missão criada com sucesso')
+      return
     } catch (error) {
+      toast.error('Erro ao criar missão')
       console.log(error)
-      
+      return
     }
   })
 

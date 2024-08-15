@@ -15,6 +15,7 @@ import Iconify from "src/components/iconify";
 import { RHFTextField } from "src/components/hook-form";
 import FormProvider from "src/components/hook-form/form-provider";
 import { RHFUploadAvatar } from "src/components/hook-form/rhf-upload";
+import { toast } from 'react-toastify';
 
 
 
@@ -36,7 +37,7 @@ export default function UserFormModal() {
     image: Yup.mixed().nullable(),
     username: Yup.string().required('Nome é obrigatório'),
     email: Yup.string().email('Email inválido').required('Email é obrigatório'),
-    password: Yup.string().required('Senha é obrigatória'),
+    password: Yup.string().min(6, 'A senha deve possuir ao menos 6 caracteres').required('Senha é obrigatória'),
   })
 
   const methods = useForm({
@@ -70,6 +71,7 @@ export default function UserFormModal() {
         await updateUser({id: edit, formData});
         reset()
         password.onFalse();
+        toast.success('Usuário atualizado com sucesso')
         router.push('/dashboard')
        return
       } catch (error) {
@@ -77,6 +79,8 @@ export default function UserFormModal() {
           if(error.message.includes('E-mail')){
             setError('email', {message: 'E-mail já cadastrado'})
         }
+        toast.error('Erro ao atualizar usuário')
+        return
       }
     }}
 
@@ -91,6 +95,7 @@ export default function UserFormModal() {
       await registerUser(formData);
       reset()
       password.onFalse();
+      toast.success('Usuário criado com sucesso')
       router.push('/dashboard')
      
     } catch (error) {
@@ -98,6 +103,8 @@ export default function UserFormModal() {
         if(error.message.includes('E-mail')){
           setError('email', {message: 'E-mail já cadastrado'})
       }
+      toast.error('Erro ao criar usuário')
+      return
     }}
   })
 

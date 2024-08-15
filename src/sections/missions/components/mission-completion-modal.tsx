@@ -15,6 +15,7 @@ import { useMissionsContext } from "src/hooks/use-missions-context";
 
 import FormProvider from "src/components/hook-form/form-provider";
 import RHFAutocomplete from "src/components/hook-form/rhf-autocomplete";
+import { toast } from 'react-toastify';
 
 
 export default function MissionCompletionModal() {
@@ -55,9 +56,12 @@ export default function MissionCompletionModal() {
           await updateMissionCompletion({id: mission!, usersIds: data.participants.map((user: any) => user.value)});
           router.push('/dashboard/missions/')
         }
-        
+        toast.success('Missão completada com sucesso!')
+        return
       } catch (error) {
+        toast.error('Erro ao completar missão')
         console.log(error)
+        return
       }
   })
 
