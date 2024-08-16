@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import { useEffect, useCallback } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -73,9 +74,12 @@ export default function BadgesFormModal() {
 
         await updateBadge({id: edit, formData});
         router.push('/dashboard/badges/')
+        toast.success('Conquista atualizada com sucesso!')
         return
       } catch (error) {
         console.log(error)
+        toast.error('Erro ao atualizar conquista')
+        return
       }
     }
     try{
@@ -89,9 +93,12 @@ export default function BadgesFormModal() {
 
       await registerBadge(formData);
       router.push('/dashboard/badges/')
-      
+      toast.success('Conquista criada com sucesso!')
+            
     } catch (error) {
       console.log(error)
+      toast.error('Erro ao criar conquista')
+      
     }
   })
 

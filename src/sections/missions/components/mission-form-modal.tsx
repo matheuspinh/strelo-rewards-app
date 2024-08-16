@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import { useEffect, useCallback } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -95,9 +96,10 @@ export default function MissionFormModal() {
         }
         await updateMission({id: edit, formData});
         router.push('/dashboard/missions/')
+        toast.success('Missão atualizada com sucesso')
         return
       } catch (error) {
-        console.log(error)
+        toast.error('Erro ao atualizar missão')
         return
       }
     }
@@ -121,8 +123,10 @@ export default function MissionFormModal() {
 
       await registerMission(formData);
       router.push('/dashboard/missions/')
+      toast.success('Missão criada com sucesso')
       
     } catch (error) {
+      toast.error('Erro ao criar missão')
       console.log(error)
       
     }

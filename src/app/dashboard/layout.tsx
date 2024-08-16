@@ -1,5 +1,8 @@
 'use client';
 
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 import DashboardLayout from 'src/layouts/dashboard';
 import { AuthGuard, RoleBasedGuard } from 'src/auth/guard';
 
@@ -22,7 +25,21 @@ export default function Layout({ children }: Props) {
           <PrivilegesProvider>
             <MissionsProvider>
               <BadgesProvider>
-                <DashboardLayout>{children}</DashboardLayout>
+                <DashboardLayout>
+                <ToastContainer
+                    position="bottom-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                  />
+                  {children}
+                  </DashboardLayout>
               </BadgesProvider>
             </MissionsProvider>
           </PrivilegesProvider>

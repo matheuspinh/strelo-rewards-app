@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import { useEffect, useCallback } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -70,6 +71,7 @@ export default function UserFormModal() {
         }
         await updateUser({id: edit!, formData});
         reset()
+        toast.success('Usuário editado com sucesso')
         password.onFalse();
         router.push(`/user/${user}`)
        
@@ -78,6 +80,8 @@ export default function UserFormModal() {
           if(error.message.includes('E-mail')){
             setError('email', {message: 'E-mail já cadastrado'})
         }
+        toast.error('Erro ao editar usuário')
+        
       }
     }
   })

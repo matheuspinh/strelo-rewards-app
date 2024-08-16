@@ -1,5 +1,6 @@
 import * as Yup from 'yup'
 import { useEffect } from "react";
+import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -51,9 +52,12 @@ export default function MissionCompletionModal() {
           await updateMissionCompletion({id: mission!, usersIds: data.participants.map((user: any) => user.value)});
           router.push('/dashboard/missions/')
         }
+        toast.success('Missão completada com sucesso!')
         
       } catch (error) {
+        toast.error('Erro ao completar missão')
         console.log(error)
+        
       }
   })
 
