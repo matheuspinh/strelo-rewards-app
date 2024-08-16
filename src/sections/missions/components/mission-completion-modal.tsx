@@ -39,16 +39,12 @@ export default function MissionCompletionModal() {
 
   const methods = useForm({
     resolver: yupResolver(userFormSchema),
-    defaultValues: {
-      participants: [],
+    values: {
+      participants: missionData?.completedBy.map(user => ({label: user.username, value: user.id, avatar: user.avatarUrl})) || []
     }
   })
 
-  const { setValue, handleSubmit, reset } = methods;
-
-  if(!isLoading && missionData){
-    setValue('participants', missionData.completedBy.map(user => ({label: user.username, value: user.id, avatar: user.avatarUrl})))
-  }
+  const { handleSubmit, reset } = methods;
 
   const onSubmit = handleSubmit(async(data) => {
       try{
