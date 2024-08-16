@@ -44,17 +44,17 @@ export default function PrivilegesModal() {
 
   const methods = useForm({
     resolver: yupResolver(userFormSchema),
+    values: {
+      title: privilegeData?.title || '',
+      description: privilegeData?.description || '',
+      xp: privilegeData?.xp || 0,
+      gold: privilegeData?.gold || 0,
+      requiredBadgeId: privilegeData?.requiredBadge.id || ''
+    }
   })
 
   const { setValue, handleSubmit, reset, setError } = methods;
 
-  if(!isLoading && privilegeData){
-    setValue('title', privilegeData.title)
-    setValue('description', privilegeData.description)
-    setValue('xp', privilegeData.xp)
-    setValue('gold', privilegeData.gold)
-    setValue('requiredBadgeId', privilegeData.requiredBadge.id)
-  }
 
   const onSubmit = handleSubmit(async(data) => {
     if(edit){

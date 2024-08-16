@@ -51,21 +51,14 @@ export default function BadgesFormModal() {
 
   const methods = useForm({
     resolver: yupResolver(userFormSchema),
+    values: {
+      title: badgeData?.title || '',
+      description: badgeData?.description || '',
+      image: badgeData?.imageUrl || null
+    }
   })
 
   const { setValue, handleSubmit, reset } = methods;
-
-  if(!isLoading && badgeData){
-    setValue('title', badgeData.title)
-    setValue('description', badgeData.description) 
-
-    if (badgeData.imageUrl){
-      const file = {
-        preview: badgeData.imageUrl
-      }
-      setValue('image', file, { shouldValidate: true })
-    }
-  }
 
   const onSubmit = handleSubmit(async(data) => {
     if(edit){
