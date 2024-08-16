@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import { useEffect, useCallback } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -36,26 +37,20 @@ export default function UserFormModal() {
     image: Yup.mixed().nullable(),
     username: Yup.string().required('Nome é obrigatório'),
     email: Yup.string().email('Email inválido').required('Email é obrigatório'),
-    password: Yup.string().required('Senha é obrigatória'),
+    password: Yup.string().min(6, 'A senha deve possuir ao menos 6 caracteres').required('Senha é obrigatória'),
   })
 
   const methods = useForm({
-    resolver: yupResolver(userFormSchema)
+    resolver: yupResolver(userFormSchema),
+    values: {
+      username: userData?.username || '',
+      email: userData?.email || '',
+      password: '',
+      image: userData?.avatarUrl || null
+    }
   })
 
   const { setValue, handleSubmit, reset, setError } = methods;
-
-  if(!isLoading && userData){
-    setValue('username', userData.username)
-    setValue('email', userData.email) 
-
-    if (userData.avatarUrl){
-      const file = {
-        preview: userData.avatarUrl
-      }
-      setValue('image', file, { shouldValidate: true })
-    }
-  }
 
   const onSubmit = handleSubmit(async(data) => {
     if(edit){
@@ -70,6 +65,7 @@ export default function UserFormModal() {
         await updateUser({id: edit, formData});
         reset()
         password.onFalse();
+        toast.success('Usuário atualizado com sucesso')
         router.push('/dashboard')
        return
       } catch (error) {
@@ -77,6 +73,8 @@ export default function UserFormModal() {
           if(error.message.includes('E-mail')){
             setError('email', {message: 'E-mail já cadastrado'})
         }
+        toast.error('Erro ao atualizar usuário')
+        return
       }
     }}
 
@@ -91,6 +89,7 @@ export default function UserFormModal() {
       await registerUser(formData);
       reset()
       password.onFalse();
+      toast.success('Usuário criado com sucesso')
       router.push('/dashboard')
      
     } catch (error) {
@@ -98,6 +97,8 @@ export default function UserFormModal() {
         if(error.message.includes('E-mail')){
           setError('email', {message: 'E-mail já cadastrado'})
       }
+      toast.error('Erro ao criar usuário')
+      
     }}
   })
 
@@ -140,7 +141,7 @@ export default function UserFormModal() {
     }, [modal, edit, reset])
 
   const renderButton = (
-    <Button onClick={handleOpenModal} variant="outlined" color='primary'>{edit ? 'Editar Usuário' : 'Novo Usuário'}</Button>
+    <Button onClick={handleOpenModal} variant="outlined" color='primary'>Novo Usuário</Button>
   )
 
   return (
@@ -169,7 +170,7 @@ export default function UserFormModal() {
 
         <Box height="40rem" width="23.4375rem" padding="2rem 1.2rem">
           <Box display="flex"  marginBottom="3rem" flexDirection="row" alignItems="center" justifyContent="space-between">
-            <Typography  variant="h4">Novo Usuário</Typography>
+            <Typography  variant="h4">{edit ? 'Editar Usuário' : 'Novo Usuário'}</Typography>
             <Close fontSize="large" onClick={handleClose} />
           </Box>
           <FormProvider methods={methods} onSubmit={onSubmit}>

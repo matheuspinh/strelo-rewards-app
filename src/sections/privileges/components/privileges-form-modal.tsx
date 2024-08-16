@@ -1,5 +1,6 @@
 import * as Yup from 'yup'
 import { useEffect } from "react";
+import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -44,17 +45,17 @@ export default function PrivilegesModal() {
 
   const methods = useForm({
     resolver: yupResolver(userFormSchema),
+    values: {
+      title: privilegeData?.title || '',
+      description: privilegeData?.description || '',
+      xp: privilegeData?.xp || 0,
+      gold: privilegeData?.gold || 0,
+      requiredBadgeId: privilegeData?.requiredBadge.id || ''
+    }
   })
 
   const { setValue, handleSubmit, reset, setError } = methods;
 
-  if(!isLoading && privilegeData){
-    setValue('title', privilegeData.title)
-    setValue('description', privilegeData.description)
-    setValue('xp', privilegeData.xp)
-    setValue('gold', privilegeData.gold)
-    setValue('requiredBadgeId', privilegeData.requiredBadge.id)
-  }
 
   const onSubmit = handleSubmit(async(data) => {
     if(edit){
@@ -63,9 +64,11 @@ export default function PrivilegesModal() {
         reset()
         password.onFalse();
         router.push('/dashboard/privileges')
+        toast.success('Privilégio atualizado com sucesso!')
        return
       } catch (error) {
-        throw new Error(error)
+        toast.error('Erro ao atualizar privilégio')
+        return
       }
     }
 
@@ -74,9 +77,11 @@ export default function PrivilegesModal() {
       reset()
       password.onFalse();
       router.push('/dashboard/privileges')
+      toast.success('Privilégio criado com sucesso!')
       
     } catch (error) {
-      throw new Error(error)
+      toast.error('Erro ao criar privilégio')
+      
     }
   })
 

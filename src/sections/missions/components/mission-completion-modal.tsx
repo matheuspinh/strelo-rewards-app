@@ -1,5 +1,6 @@
 import * as Yup from 'yup'
 import { useEffect } from "react";
+import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -38,16 +39,12 @@ export default function MissionCompletionModal() {
 
   const methods = useForm({
     resolver: yupResolver(userFormSchema),
-    defaultValues: {
-      participants: [],
+    values: {
+      participants: missionData?.completedBy.map(user => ({label: user.username, value: user.id, avatar: user.avatarUrl})) || []
     }
   })
 
-  const { setValue, handleSubmit, reset } = methods;
-
-  if(!isLoading && missionData){
-    setValue('participants', missionData.completedBy.map(user => ({label: user.username, value: user.id, avatar: user.avatarUrl})))
-  }
+  const { handleSubmit, reset } = methods;
 
   const onSubmit = handleSubmit(async(data) => {
       try{
@@ -55,9 +52,12 @@ export default function MissionCompletionModal() {
           await updateMissionCompletion({id: mission!, usersIds: data.participants.map((user: any) => user.value)});
           router.push('/dashboard/missions/')
         }
+        toast.success('Missão completada com sucesso!')
         
       } catch (error) {
+        toast.error('Erro ao completar missão')
         console.log(error)
+        
       }
   })
 
