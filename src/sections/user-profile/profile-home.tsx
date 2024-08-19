@@ -9,6 +9,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import CardHeader from '@mui/material/CardHeader';
 
 import { User } from 'src/app/contexts/users/types';
+import { Badge } from 'src/app/contexts/badges/types';
 
 import Image from 'src/components/image';
 
@@ -20,6 +21,12 @@ type Props = {
 };
 
 export default function ProfileHome({ userInfo }: Props) {
+  const softSkillBadges = userInfo?.badges.filter((badge) => badge.skillType === 'softskill');
+  const hardSkillBadges = userInfo?.badges.filter((badge) => badge.skillType === 'hardskill');
+  const goldBadges = userInfo?.badges.filter((badge) => badge.classification === 'gold');
+  const silverBadges = userInfo?.badges.filter((badge) => badge.classification === 'silver');
+  const bronzeBadges = userInfo?.badges.filter((badge) => badge.classification === 'bronze');
+
   const renderResources = (
     <Card sx={{ py: 3, textAlign: 'center', typography: 'h4' }}>
       <Stack
@@ -46,20 +53,32 @@ export default function ProfileHome({ userInfo }: Props) {
     </Card>
   );
 
-  const renderAchievements = (
+  const renderTotalBadges = (
     <Card sx={{}}>
-      <CardHeader sx={{height:'4.75rem'}} title="Conquistas"/>
-      <Stack spacing={2} sx={{ p: 3 }}>
-        {userInfo && userInfo.badges.map((badge) => (
-          <Stack key={badge.id} direction="row" spacing="1rem">
-              <Image src={badge.imageUrl || ''} sx={{ width: 24, height: 24, borderRadius: '15%' }} />
-              <Typography variant='body2'>{badge.title}</Typography>            
-          </Stack>
-        )
-        )}
+      <CardHeader sx={{height:'auto'}} title="Conquistas Totais"/>
+      <Stack spacing={1} sx={{ p: 3 }}>
+        <Stack display='flex' direction="row" gap={1}><strong>Ouro:</strong> {goldBadges?.length}</Stack>
+        <Stack display='flex' direction="row" gap={1}><strong>Prata:</strong> {silverBadges?.length}</Stack>
+        <Stack display='flex' direction="row" gap={1}><strong>Bronze:</strong> {bronzeBadges?.length}</Stack>
       </Stack>
     </Card>
   );
+
+  const renderSkillBadge = (skill:string, skillBadges: Badge[]) => (
+      <Card sx={{}}>
+        <CardHeader sx={{height:'4.75rem'}} title={`${skill} (${skillBadges.length}) `}/>
+        <Stack spacing={2} sx={{ p: 3 }}>
+          {userInfo && skillBadges.map((badge) => (
+            <Stack key={badge.id} direction="row" spacing="1rem">
+                <Image src={badge.imageUrl || ''} sx={{ width: 24, height: 24, borderRadius: '15%' }} />
+                <Typography color={badge.classification} variant='body2'>{badge.title}</Typography>            
+            </Stack>
+          )
+          )}
+        </Stack>
+      </Card>
+    )
+  
 
   const renderPrivileges = (
     <Card sx={{}}>
@@ -81,7 +100,11 @@ export default function ProfileHome({ userInfo }: Props) {
         <Stack spacing={3}>
           {userInfo && renderResources}
 
-          {userInfo && renderAchievements}
+          {userInfo && renderTotalBadges}
+
+          {userInfo && renderSkillBadge('Soft Skills' ,softSkillBadges)}
+
+          {userInfo && renderSkillBadge('Hard Skills', hardSkillBadges)}
 
           {userInfo && renderPrivileges}
         </Stack>

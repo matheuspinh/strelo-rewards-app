@@ -110,7 +110,7 @@ export default function BadgesView() {
                       <Box display="flex" flexDirection="row" alignItems="center" gap="1rem">
                         <Image width="4rem" height="4rem" borderRadius="0.75rem" src={row.imageUrl}/>
                         <Box> 
-                          <Typography variant="subtitle2" noWrap>
+                          <Typography color={row.classification} variant="subtitle2" noWrap>
                             {row.title}
                           </Typography>
                           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
