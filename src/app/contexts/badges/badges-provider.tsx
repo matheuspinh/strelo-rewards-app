@@ -3,8 +3,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import axios, { endpoints } from "src/utils/axios";
 
-import { BadgesContext } from "./badges-context";
 import { BadgeCategoryOptions } from "./types";
+import { BadgesContext } from "./badges-context";
 
 interface ProviderProps {
   children: React.ReactNode;
@@ -83,6 +83,7 @@ export function BadgesProvider({ children }: ProviderProps){
     isError,
     badgesClassifications,
     badgesSkillTypes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [data, registerBadge, deleteBadge, updateBadge, isLoading, isError]);
 
   return <BadgesContext.Provider value={contextValue}>{children}</BadgesContext.Provider>

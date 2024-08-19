@@ -9,11 +9,11 @@ import Grid from '@mui/material/Unstable_Grid2';
 import CardHeader from '@mui/material/CardHeader';
 
 import { User } from 'src/app/contexts/users/types';
+import { Badge } from 'src/app/contexts/badges/types';
 
 import Image from 'src/components/image';
 
 import ProfileMission from './profile-mission';
-import { Badge } from 'src/app/contexts/badges/types';
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -57,15 +57,14 @@ export default function ProfileHome({ userInfo }: Props) {
     <Card sx={{}}>
       <CardHeader sx={{height:'auto'}} title="Conquistas Totais"/>
       <Stack spacing={1} sx={{ p: 3 }}>
-        <Stack display='flex' direction={'row'} gap={1}><strong>Ouro:</strong> {goldBadges?.length}</Stack>
-        <Stack display='flex' direction={'row'} gap={1}><strong>Prata:</strong> {silverBadges?.length}</Stack>
-        <Stack display='flex' direction={'row'} gap={1}><strong>Bronze:</strong> {bronzeBadges?.length}</Stack>
+        <Stack display='flex' direction="row" gap={1}><strong>Ouro:</strong> {goldBadges?.length}</Stack>
+        <Stack display='flex' direction="row" gap={1}><strong>Prata:</strong> {silverBadges?.length}</Stack>
+        <Stack display='flex' direction="row" gap={1}><strong>Bronze:</strong> {bronzeBadges?.length}</Stack>
       </Stack>
     </Card>
   );
 
-  const renderSkillBadge = (skill:string, skillBadges: Badge[]) => {
-    return (
+  const renderSkillBadge = (skill:string, skillBadges: Badge[]) => (
       <Card sx={{}}>
         <CardHeader sx={{height:'4.75rem'}} title={`${skill} (${skillBadges.length}) `}/>
         <Stack spacing={2} sx={{ p: 3 }}>
@@ -78,8 +77,7 @@ export default function ProfileHome({ userInfo }: Props) {
           )}
         </Stack>
       </Card>
-    );
-  }
+    )
   
 
   const renderPrivileges = (

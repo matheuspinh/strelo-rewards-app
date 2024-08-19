@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Close } from "@mui/icons-material";
-import { Box, Button, Dialog, useTheme, Typography, dialogClasses, MenuItem } from "@mui/material";
+import { Box, Button, Dialog, useTheme, MenuItem, Typography, dialogClasses } from "@mui/material";
 
 import { useBoolean } from "src/hooks/use-boolean";
 import { useBadge } from 'src/hooks/use-badge-detail';
@@ -14,9 +14,9 @@ import { useResponsive } from "src/hooks/use-responsive";
 import { useBadgesContext } from 'src/hooks/use-badges-context';
 
 import { RHFTextField } from "src/components/hook-form";
+import { RHFSelect } from 'src/components/hook-form/rhf-select';
 import FormProvider from "src/components/hook-form/form-provider";
 import { RHFUploadAvatar } from "src/components/hook-form/rhf-upload";
-import { RHFSelect } from 'src/components/hook-form/rhf-select';
 
 export default function BadgesFormModal() {
   const router = useRouter()
@@ -73,11 +73,11 @@ export default function BadgesFormModal() {
         toast.success('Conquista criada com sucesso!')
       }
       router.push('/dashboard/badges/')
-      return
+      
     } catch (error) {
       console.log(error)
       toast.error('Erro ao criar conquista')
-      return
+      
     }
   })
 
