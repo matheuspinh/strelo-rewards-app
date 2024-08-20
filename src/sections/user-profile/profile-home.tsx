@@ -8,8 +8,11 @@ import { Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import CardHeader from '@mui/material/CardHeader';
 
+import { getBorderColor } from 'src/utils/getBorderColor';
+
 import { User } from 'src/app/contexts/users/types';
 import { Badge } from 'src/app/contexts/badges/types';
+import { GoldMedal, BronzeMedal, SilverMedal } from 'src/assets/icons/medals-icons';
 
 import Image from 'src/components/image';
 
@@ -21,6 +24,9 @@ type Props = {
 };
 
 export default function ProfileHome({ userInfo }: Props) {
+  
+  const completedMissionsSet = new Set(userInfo?.completedMissions.map(mission => mission.id) || []);
+  const ongoingMissions = userInfo?.missions.filter(mission =>!completedMissionsSet.has(mission.id));
   const softSkillBadges = userInfo?.badges.filter((badge) => badge.skillType === 'softskill');
   const hardSkillBadges = userInfo?.badges.filter((badge) => badge.skillType === 'hardskill');
   const goldBadges = userInfo?.badges.filter((badge) => badge.classification === 'gold');
@@ -57,9 +63,9 @@ export default function ProfileHome({ userInfo }: Props) {
     <Card sx={{}}>
       <CardHeader sx={{height:'auto'}} title="Conquistas Totais"/>
       <Stack spacing={1} sx={{ p: 3 }}>
-        <Stack display='flex' direction="row" gap={1}><strong>Ouro:</strong> {goldBadges?.length}</Stack>
-        <Stack display='flex' direction="row" gap={1}><strong>Prata:</strong> {silverBadges?.length}</Stack>
-        <Stack display='flex' direction="row" gap={1}><strong>Bronze:</strong> {bronzeBadges?.length}</Stack>
+        <Stack display='flex' direction="row" gap={1}><GoldMedal/> <strong>Ouro:</strong> {goldBadges?.length}</Stack>
+        <Stack display='flex' direction="row" gap={1}><SilverMedal/><strong>Prata:</strong> {silverBadges?.length}</Stack>
+        <Stack display='flex' direction="row" gap={1}><BronzeMedal/><strong>Bronze:</strong> {bronzeBadges?.length}</Stack>
       </Stack>
     </Card>
   );
@@ -70,8 +76,10 @@ export default function ProfileHome({ userInfo }: Props) {
         <Stack spacing={2} sx={{ p: 3 }}>
           {userInfo && skillBadges.map((badge) => (
             <Stack key={badge.id} direction="row" spacing="1rem">
-                <Image src={badge.imageUrl || ''} sx={{ width: 24, height: 24, borderRadius: '15%' }} />
-                <Typography color={badge.classification} variant='body2'>{badge.title}</Typography>            
+              <Box padding={0} sx={{borderRadius: '15%', outline: `3px solid ${getBorderColor(badge.classification)}`}}>
+                <Image src={badge.imageUrl || ''} sx={{ width: 24, height: 24, borderRadius: '15%'}} />
+                </Box>
+                <Typography variant='body2'>{badge.title}</Typography>            
             </Stack>
           )
           )}
@@ -112,9 +120,26 @@ export default function ProfileHome({ userInfo }: Props) {
 
       <Grid xs={12} md={8}>
         <Stack spacing={3}>
-          {userInfo && userInfo.missions.map((mission) => (
+          {ongoingMissions.length > 0 && <Card sx={{
+            maxHeight: '30rem',
+            overflowY: 'auto',
+            scrollbarWidth: 'none',}}>
+          <CardHeader sx={{height:'4.75rem'}} title="Missões em Andamento"/>
+          {userInfo && ongoingMissions.map((mission) => (
             <ProfileMission key={mission.id} mission={mission} />
           ))}
+          </Card>}
+          {userInfo?.completedMissions.length > 0 && <Card sx={{
+            maxHeight: '30rem',
+            overflowY: 'auto',
+            scrollbarWidth: 'none',
+          }}>
+          <CardHeader sx={{height:'4.75rem'}} title="Missões Concluídas"/>
+          {userInfo && userInfo?.completedMissions.map((mission) => (
+            <ProfileMission key={mission.id} mission={mission} />
+          ))}
+          </Card>}
+          
         </Stack>
       </Grid>
     </Grid>
