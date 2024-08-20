@@ -8,14 +8,15 @@ import { Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import CardHeader from '@mui/material/CardHeader';
 
+import { getBorderColor } from 'src/utils/getBorderColor';
+
 import { User } from 'src/app/contexts/users/types';
 import { Badge } from 'src/app/contexts/badges/types';
+import { GoldMedal, BronzeMedal, SilverMedal } from 'src/assets/icons/medals-icons';
 
 import Image from 'src/components/image';
 
 import ProfileMission from './profile-mission';
-import { BronzeMedal, GoldMedal, SilverMedal } from 'src/assets/icons/medals-icons';
-import { getBorderColor } from 'src/utils/getBorderColor';
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -24,9 +25,7 @@ type Props = {
 
 export default function ProfileHome({ userInfo }: Props) {
   const completedMissionsSet = new Set(userInfo?.completedMissions.map(mission => mission.id) || []);
-  const ongoingMissions = userInfo?.missions.filter(mission =>{ 
-    return !completedMissionsSet.has(mission.id)
-  });
+  const ongoingMissions = userInfo?.missions.filter(mission =>!completedMissionsSet.has(mission.id));
   const softSkillBadges = userInfo?.badges.filter((badge) => badge.skillType === 'softskill');
   const hardSkillBadges = userInfo?.badges.filter((badge) => badge.skillType === 'hardskill');
   const goldBadges = userInfo?.badges.filter((badge) => badge.classification === 'gold');

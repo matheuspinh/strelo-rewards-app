@@ -1,6 +1,5 @@
 
-import Card from '@mui/material/Card';
-import { Box, Divider, Stack, Typography } from '@mui/material';
+import { Box, Stack, Divider, Typography } from '@mui/material';
 
 import { Mission } from 'src/app/contexts/missions/types';
 

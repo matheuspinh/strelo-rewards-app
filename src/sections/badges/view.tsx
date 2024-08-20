@@ -9,6 +9,8 @@ import { Stack, Table, Tooltip, TableRow, TableBody, TableCell, IconButton, Tabl
 import { useResponsive } from 'src/hooks/use-responsive';
 import { useBadgesContext } from 'src/hooks/use-badges-context';
 
+import { getBorderColor } from 'src/utils/getBorderColor';
+
 import { Badge } from 'src/app/contexts/badges/types';
 
 import Image from 'src/components/image';
@@ -18,7 +20,6 @@ import { useTable, emptyRows, getComparator, TableEmptyRows, TableHeadCustom, Ta
 
 import OptionsPopover from './components/options-popover';
 import BadgesFormModal from './components/badges-form-modal';
-import { getBorderColor } from 'src/utils/getBorderColor';
 
 
 //
