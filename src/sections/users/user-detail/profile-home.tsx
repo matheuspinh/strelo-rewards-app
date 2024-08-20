@@ -21,6 +21,10 @@ type Props = {
 };
 
 export default function ProfileHome({ userInfo }: Props) {
+  const completedMissionsSet = new Set(userInfo?.completedMissions.map(mission => mission.id) || []);
+  const ongoingMissions = userInfo?.missions.filter(mission =>{ 
+    return !completedMissionsSet.has(mission.id)
+  });
   const softSkillBadges = userInfo?.badges.filter((badge) => badge.skillType === 'softskill');
   const hardSkillBadges = userInfo?.badges.filter((badge) => badge.skillType === 'hardskill');
   const goldBadges = userInfo?.badges.filter((badge) => badge.classification === 'gold');
@@ -112,9 +116,26 @@ export default function ProfileHome({ userInfo }: Props) {
 
       <Grid xs={12} md={8}>
         <Stack spacing={3}>
-          {userInfo && userInfo.missions.map((mission) => (
+         <Card sx={{
+            maxHeight: '30rem',
+            overflowY: 'auto',
+            scrollbarWidth: 'none',}}>
+          <CardHeader sx={{height:'4.75rem'}} title="Missões em Andamento"/>
+          {userInfo && ongoingMissions.map((mission) => (
             <ProfileMission key={mission.id} mission={mission} />
           ))}
+          </Card>
+          <Card sx={{
+            maxHeight: '30rem',
+            overflowY: 'auto',
+            scrollbarWidth: 'none',
+          }}>
+          <CardHeader sx={{height:'4.75rem'}} title="Missões Concluídas"/>
+          {userInfo && userInfo?.completedMissions.map((mission) => (
+            <ProfileMission key={mission.id} mission={mission} />
+          ))}
+          </Card>
+          
         </Stack>
       </Grid>
     </Grid>

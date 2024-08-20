@@ -30,6 +30,7 @@ export type User = {
   gold: number;
   badges: Badge[];
   missions: Mission[];
+  completedMissions: Mission[];
   privileges: Privilege[];
 }
 
