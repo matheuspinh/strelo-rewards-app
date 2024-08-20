@@ -14,6 +14,8 @@ import { Badge } from 'src/app/contexts/badges/types';
 import Image from 'src/components/image';
 
 import ProfileMission from './profile-mission';
+import { getBorderColor } from 'src/utils/getBorderColor';
+import { BronzeMedal, GoldMedal, SilverMedal } from 'src/assets/icons/medals-icons';
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -62,9 +64,9 @@ export default function ProfileHome({ userInfo }: Props) {
     <Card sx={{}}>
       <CardHeader sx={{height:'auto'}} title="Conquistas Totais"/>
       <Stack spacing={1} sx={{ p: 3 }}>
-        <Stack display='flex' direction="row" gap={1}><strong>Ouro:</strong> {goldBadges?.length}</Stack>
-        <Stack display='flex' direction="row" gap={1}><strong>Prata:</strong> {silverBadges?.length}</Stack>
-        <Stack display='flex' direction="row" gap={1}><strong>Bronze:</strong> {bronzeBadges?.length}</Stack>
+        <Stack display='flex' direction="row" gap={1}><GoldMedal/> <strong>Ouro:</strong> {goldBadges?.length}</Stack>
+        <Stack display='flex' direction="row" gap={1}><SilverMedal/><strong>Prata:</strong> {silverBadges?.length}</Stack>
+        <Stack display='flex' direction="row" gap={1}><BronzeMedal/><strong>Bronze:</strong> {bronzeBadges?.length}</Stack>
       </Stack>
     </Card>
   );
@@ -75,8 +77,10 @@ export default function ProfileHome({ userInfo }: Props) {
         <Stack spacing={2} sx={{ p: 3 }}>
           {userInfo && skillBadges.map((badge) => (
             <Stack key={badge.id} direction="row" spacing="1rem">
-                <Image src={badge.imageUrl || ''} sx={{ width: 24, height: 24, borderRadius: '15%' }} />
-                <Typography color={badge.classification} variant='body2'>{badge.title}</Typography>            
+              <Box padding={0} sx={{borderRadius: '15%', outline: `3px solid ${getBorderColor(badge.classification)}`}}>
+                <Image src={badge.imageUrl || ''} sx={{ width: 24, height: 24, borderRadius: '15%'}} />
+                </Box>
+                <Typography variant='body2'>{badge.title}</Typography>            
             </Stack>
           )
           )}

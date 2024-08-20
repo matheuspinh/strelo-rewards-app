@@ -18,6 +18,7 @@ import { useTable, emptyRows, getComparator, TableEmptyRows, TableHeadCustom, Ta
 
 import OptionsPopover from './components/options-popover';
 import BadgesFormModal from './components/badges-form-modal';
+import { getBorderColor } from 'src/utils/getBorderColor';
 
 
 //
@@ -108,9 +109,11 @@ export default function BadgesView() {
                   >
                     <TableCell sx={{padding: '1rem'}}>
                       <Box display="flex" flexDirection="row" alignItems="center" gap="1rem">
+                        <Box padding={0} sx={{borderRadius: '0.75rem', outline: `3px solid ${getBorderColor(row.classification)}`}}>
                         <Image width="4rem" height="4rem" borderRadius="0.75rem" src={row.imageUrl}/>
+                        </Box>
                         <Box> 
-                          <Typography color={row.classification} variant="subtitle2" noWrap>
+                          <Typography variant="subtitle2" noWrap>
                             {row.title}
                           </Typography>
                           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
