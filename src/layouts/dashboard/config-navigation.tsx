@@ -51,14 +51,15 @@ export function useNavData() {
       {
         subheader: 'Overview',
         items: [
-          { title: 'Usuários', path: paths.dashboard.root, icon: ICONS.dashboard },
+          { title: 'Usuários', path: paths.dashboard.root, icon: ICONS.user },
           { title: 'Missões', path: paths.dashboard.missions, icon: ICONS.ecommerce },
           {
             title: 'Conquistas',
             path: paths.dashboard.badges,
-            icon: ICONS.analytics,
+            icon: ICONS.tour,
           },
-          { title: 'Privilégios', path: paths.dashboard.privileges, icon: ICONS.banking }
+          { title: 'Privilégios', path: paths.dashboard.privileges, icon: ICONS.banking },
+          { title: 'Níveis', path: paths.dashboard.levels, icon: ICONS.analytics }
         ],
       },
     ],

@@ -24,6 +24,7 @@ export const paths = {
     missions: `${ROOTS.DASHBOARD}/missions`,
     badges: `${ROOTS.DASHBOARD}/badges`,
     privileges: `${ROOTS.DASHBOARD}/privileges`,
+    levels: `${ROOTS.DASHBOARD}/levels`,
     group: {
       root: `${ROOTS.DASHBOARD}/group`,
       five: `${ROOTS.DASHBOARD}/group/five`,
