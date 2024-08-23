@@ -63,6 +63,11 @@ export const endpoints = {
     detail: '/api/privilege',
     update: '/api/privilege'
   },
+  levels:{
+    list: '/api/levels',
+    register: '/api/levels',
+    levelUp: '/api/levels'
+  },
   mail: {
     list: '/api/mail/list',
     details: '/api/mail/details',
