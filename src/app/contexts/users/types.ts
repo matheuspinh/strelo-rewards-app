@@ -1,4 +1,5 @@
 import { Badge } from "../badges/types";
+import { Level } from "../levels/types";
 import { Privilege } from "../privileges/types";
 
 type Mission = {
@@ -32,6 +33,7 @@ export type User = {
   missions: Mission[];
   completedMissions: Mission[];
   privileges: Privilege[];
+  currentLevel: Level;
 }
 
 export type UsersList = {
