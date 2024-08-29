@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Close } from "@mui/icons-material";
-import { Box, Button, Dialog, useTheme, Typography, dialogClasses } from "@mui/material";
+import { Box, Button, Dialog, useTheme, MenuItem, Typography, dialogClasses } from "@mui/material";
 
 import { useBoolean } from "src/hooks/use-boolean";
 import { useBadge } from 'src/hooks/use-badge-detail';
@@ -14,21 +14,10 @@ import { useResponsive } from "src/hooks/use-responsive";
 import { useBadgesContext } from 'src/hooks/use-badges-context';
 
 import { RHFTextField } from "src/components/hook-form";
+import { RHFSelect } from 'src/components/hook-form/rhf-select';
 import FormProvider from "src/components/hook-form/form-provider";
 import { RHFUploadAvatar } from "src/components/hook-form/rhf-upload";
 
-export const badgesMock = [
-  { id: '1', name: 'Badge 1'},
-  { id: '2', name: 'Badge 2'},
-  { id: '3', name: 'Badge 3'},
-  { id: '4', name: 'Badge 4'},
-  { id: '5', name: 'Badge 5'},
-  { id: '6', name: 'Badge 6'},
-  { id: '7', name: 'Badge 7'},
-  { id: '8', name: 'Badge 8'},
-  { id: '9', name: 'Badge 9'},
-  { id: '10', name: 'Badge 10'},
-]
 export default function BadgesFormModal() {
   const router = useRouter()
   const searchParams = useSearchParams();
@@ -38,7 +27,7 @@ export default function BadgesFormModal() {
   const isMobile = useResponsive('down', 'sm');
   const password = useBoolean();
 
-  const { registerBadge, updateBadge } = useBadgesContext();
+  const { registerBadge, updateBadge, badgesClassifications, badgesSkillTypes } = useBadgesContext();
 
   const {data: badgeData, isLoading, isError} = useBadge(edit!);
 
@@ -47,54 +36,44 @@ export default function BadgesFormModal() {
   const userFormSchema = Yup.object().shape({
     image: Yup.mixed().nullable(),
     title: Yup.string().required('Título é obrigatório'),
+    classification: Yup.string().required('Classificação é obrigatória'),
+    skillType: Yup.string().required('Tipo de habilidade é obrigatório'),
     description: Yup.string().required('Descreva a missão.'),
   })
+
 
   const methods = useForm({
     resolver: yupResolver(userFormSchema),
     values: {
       title: badgeData?.title || '',
       description: badgeData?.description || '',
-      image: badgeData?.imageUrl || null
+      image: badgeData?.imageUrl || null,
+      classification: badgeData?.classification || '',
+      skillType: badgeData?.skillType || '',
     }
   })
 
   const { setValue, handleSubmit, reset } = methods;
 
   const onSubmit = handleSubmit(async(data) => {
-    if(edit){
-
-      try{
-        const formData = new FormData();
-        formData.append('title', data.title);
-        formData.append('description', data.description);
-        if(data.image && data.image instanceof File){
-          formData.append('image', data.image);
-        }
-
-        await updateBadge({id: edit, formData});
-        router.push('/dashboard/badges/')
-        toast.success('Conquista atualizada com sucesso!')
-        return
-      } catch (error) {
-        console.log(error)
-        toast.error('Erro ao atualizar conquista')
-        return
-      }
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('description', data.description);
+    formData.append('classification', data.classification);
+    formData.append('skillType', data.skillType);
+    if(data.image && data.image instanceof File){
+      formData.append('image', data.image);
     }
     try{
-      const formData = new FormData();
-      
-      formData.append('title', data.title);
-      formData.append('description', data.description);
-      if(data.image && data.image instanceof File){
-        formData.append('image', data.image);
+      if(edit){
+        await updateBadge({id: edit, formData});
+        toast.success('Conquista atualizada com sucesso!')
+      } else {
+        await registerBadge(formData);
+        toast.success('Conquista criada com sucesso!')
       }
-
-      await registerBadge(formData);
       router.push('/dashboard/badges/')
-      toast.success('Conquista criada com sucesso!')
-            
+      
     } catch (error) {
       console.log(error)
       toast.error('Erro ao criar conquista')
@@ -157,8 +136,9 @@ export default function BadgesFormModal() {
       }}
       PaperProps={{
         sx: {
-          mt: 15,
+          mt: isMobile ? 5 : 15,
           overflow: 'unset',
+          
         },
       }}
       sx={{
@@ -168,7 +148,7 @@ export default function BadgesFormModal() {
         },
       }}>
 
-        <Box height="40rem" width="23.4375rem" padding="2rem 1.2rem">
+        <Box width="23.4375rem" padding="2rem 1.2rem" overflow='auto' sx={{scrollbarWidth:'none'}}>
           <Box display="flex"  marginBottom="3rem" flexDirection="row" alignItems="center" justifyContent="space-between">
             <Typography  variant="h4">{edit ? 'Editar Conquista' : 'Nova Conquista'}</Typography>
             <Close fontSize="large" onClick={handleClose} />
@@ -179,6 +159,20 @@ export default function BadgesFormModal() {
             <Box display="flex" flexDirection="column" gap="1.5rem">
               <RHFTextField name='title' label='Título'/>
               <RHFTextField name='description' multiline rows={3} label='Descrição'/>
+              <RHFSelect name='classification' label='Classificação'>
+                {
+                  badgesClassifications.map((classification) => (
+                    <MenuItem key={classification.value} value={classification.value}>{classification.label}</MenuItem>
+                  ))
+                }
+              </RHFSelect>
+              <RHFSelect name='skillType' label='Tipo de habilidade'>
+                {
+                  badgesSkillTypes.map((skillType) => (
+                    <MenuItem key={skillType.value} value={skillType.value}>{skillType.label}</MenuItem>
+                  ))
+                }
+              </RHFSelect>
               <Button fullWidth variant="contained" size="large" type='submit'>{edit ? 'Editar Conquista': 'Criar Conquista'}</Button>
             </Box>            
           </Box>

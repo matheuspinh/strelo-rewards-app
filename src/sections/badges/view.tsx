@@ -9,6 +9,8 @@ import { Stack, Table, Tooltip, TableRow, TableBody, TableCell, IconButton, Tabl
 import { useResponsive } from 'src/hooks/use-responsive';
 import { useBadgesContext } from 'src/hooks/use-badges-context';
 
+import { getBorderColor } from 'src/utils/getBorderColor';
+
 import { Badge } from 'src/app/contexts/badges/types';
 
 import Image from 'src/components/image';
@@ -108,7 +110,9 @@ export default function BadgesView() {
                   >
                     <TableCell sx={{padding: '1rem'}}>
                       <Box display="flex" flexDirection="row" alignItems="center" gap="1rem">
+                        <Box padding={0} sx={{borderRadius: '0.75rem', outline: `3px solid ${getBorderColor(row.classification)}`}}>
                         <Image width="4rem" height="4rem" borderRadius="0.75rem" src={row.imageUrl}/>
+                        </Box>
                         <Box> 
                           <Typography variant="subtitle2" noWrap>
                             {row.title}

@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import axios, { endpoints } from "src/utils/axios";
 
+import { BadgeCategoryOptions } from "./types";
 import { BadgesContext } from "./badges-context";
 
 interface ProviderProps {
@@ -11,6 +12,17 @@ interface ProviderProps {
 
 export function BadgesProvider({ children }: ProviderProps){
   const queryClient = useQueryClient()
+
+  const badgesClassifications = [
+    { value: 'bronze', label: 'Bronze' },
+    { value: 'silver', label: 'Prata' },
+    { value: 'gold', label: 'Ouro' },
+  ] as BadgeCategoryOptions[]
+
+  const badgesSkillTypes = [
+    {value: 'softskill', label: 'Soft Skill'},
+    {value: 'hardskill', label: 'Hard Skill'},
+  ] as BadgeCategoryOptions[]
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["badges"],
@@ -69,6 +81,9 @@ export function BadgesProvider({ children }: ProviderProps){
     updateBadge,
     isLoading,
     isError,
+    badgesClassifications,
+    badgesSkillTypes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [data, registerBadge, deleteBadge, updateBadge, isLoading, isError]);
 
   return <BadgesContext.Provider value={contextValue}>{children}</BadgesContext.Provider>
