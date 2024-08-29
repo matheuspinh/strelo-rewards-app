@@ -8,9 +8,9 @@ import { AuthGuard, RoleBasedGuard } from 'src/auth/guard';
 
 import { UsersProvider } from '../contexts/users/users-provider';
 import { BadgesProvider } from '../contexts/badges/badges-provider';
+import { LevelsProvider } from '../contexts/levels/levels-provider';
 import { MissionsProvider } from '../contexts/missions/missions-provider';
 import { PrivilegesProvider } from '../contexts/privileges/privileges-provider';
-import { LevelsProvider } from '../contexts/levels/levels-provider';
 
 // ----------------------------------------------------------------------
 
