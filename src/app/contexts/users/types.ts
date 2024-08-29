@@ -34,6 +34,7 @@ export type User = {
   completedMissions: Mission[];
   privileges: Privilege[];
   currentLevel: Level;
+  nextLevel: Level;
 }
 
 export type UsersList = {
