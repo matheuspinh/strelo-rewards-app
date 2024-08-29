@@ -21,8 +21,8 @@ export function LevelsProvider({ children }: ProviderProps){
   })
 
   const { mutateAsync: levelUpUser } = useMutation({
-    mutationFn: async (data: any) => {
-      const res = await axios.post(`${endpoints.levels.levelUp}/${data.levelId}/${data.userId}`)
+    mutationFn: async (formData: any) => {
+      const res = await axios.post(`${endpoints.levels.levelUp}/${formData.levelId}/${formData.userId}`)
       return res.data
     },
     onSuccess: () => {
@@ -35,12 +35,27 @@ export function LevelsProvider({ children }: ProviderProps){
   })
 
   const { mutateAsync: registerLevel } = useMutation({
-    mutationFn: async (data: any)=> {
-      const res = await axios.post(endpoints.levels.register, data)
+    mutationFn: async (formData: any)=> {
+      const res = await axios.post(endpoints.levels.register, formData)
       return res.data
     },
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['levels']})
+    }
+  })
+
+  const {mutateAsync: updateLevel} = useMutation({
+    mutationFn: async({levelId, formData}: {levelId:string, formData: any})=> {
+      const res = await axios.patch(`${endpoints.levels.update}/${levelId}`, formData)
+
+      return res.data
+    },
+    onSuccess:(dataRes, variables) => {
+      const queryKeys = [
+        ['levels'],
+        ['levels', variables.levelId]
+      ]
+      queryKeys.forEach(key => queryClient.invalidateQueries({queryKey: key}))
     }
   })
 
@@ -49,8 +64,9 @@ export function LevelsProvider({ children }: ProviderProps){
     isLoading,
     isError,
     registerLevel,
-    levelUpUser
-  }), [data, isLoading, isError, registerLevel, levelUpUser])
+    levelUpUser,
+    updateLevel
+  }), [data, isLoading, isError, registerLevel, levelUpUser, updateLevel])
 
   return <LevelsContext.Provider value={contextValue}>{children}</LevelsContext.Provider>
 }
