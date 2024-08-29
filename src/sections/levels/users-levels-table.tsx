@@ -2,23 +2,28 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useRouter } from "next/navigation";
 
 import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import { Box, Avatar, Button } from '@mui/material';
+import { Box, Avatar } from '@mui/material';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import { ArrowUpward } from '@mui/icons-material';
 import TableContainer from '@mui/material/TableContainer';
 
 import { useResponsive } from 'src/hooks/use-responsive';
-import { useUsersContext } from 'src/hooks/use-users-context';
+
+import { getBorderColor } from 'src/utils/getBorderColor';
 
 import { User, UsersList } from 'src/app/contexts/users/types';
+import { Level, LevelsList } from 'src/app/contexts/levels/types';
 
+import Image from 'src/components/image';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import {
@@ -29,9 +34,8 @@ import {
   TableHeadCustom,
   TableSelectedAction,
 } from 'src/components/table';
-import { useRouter, useSearchParams } from "next/navigation";
+
 import OptionsPopover from './components/user-modal-options-popover';
-import { Level, LevelsList } from 'src/app/contexts/levels/types';
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +57,8 @@ export default function UsersLevelTable({levels ,data, isLoading}: {levels: Leve
       { id: 'id',  label: '', align: 'right' }
     ]:[
       { id: 'name', label: 'Usuário e ID', align: 'left' },
-      { id: 'progress', label: 'Progresso ao próximo Nível', align: 'right' },
+      { id: 'progress', label: 'Progresso Geral  ao próximo Nível', align: 'right' },
+      { id: 'badgeProgress', label: 'Classificação de Badges ao próximo Nível', align: 'right' },
       { id: 'currentLevel', label: 'Nível', align: 'right' },
       { id: 'id',  label: '', align: 'right' }
     ]
@@ -77,35 +82,64 @@ export default function UsersLevelTable({levels ,data, isLoading}: {levels: Leve
     comparator: getComparator(table.order, table.orderBy),
   })
 
-  const getNextLevel = (currentLevelId: string | null) => {
-    return levels.find(level => level.previousLevelId === currentLevelId)
-  }
+
+  const getNextLevel = (currentLevelId: string | null) => levels.find(level => level.previousLevelId === currentLevelId)
 
   const getProgress = (user: User, nextLevel: Level | undefined) => {
     if(!nextLevel) return {
       softSkillsProgress: user.badges.filter(badge => badge.skillType === 'softskill').length,
       hardSkillsProgress: user.badges.filter(badge => badge.skillType === 'hardskill').length,
+      goldHardSkillsProgress: user.badges.filter(badge => badge.classification === 'gold').length,
+      silverHardSkillsProgress: user.badges.filter(badge => badge.classification === 'silver').length,
+      goldSoftSkillsProgress: user.badges.filter(badge => badge.classification === 'gold').length,
+      silverSoftSkillsProgress: user.badges.filter(badge => badge.classification === 'silver').length,
       expProgress: user.xp,
+      specificBadgeProgress: undefined,
       eligibleForLevelUp: true
-     }
+    }
 
-     const softSkillBadges = user.badges.filter(badge => badge.skillType === 'softskill')
-     const hardSkillBadges = user.badges.filter(badge => badge.skillType === 'hardskill')
+
+    const softSkillBadges = user.badges.filter(badge => badge.skillType === 'softskill')
+    const hardSkillBadges = user.badges.filter(badge => badge.skillType === 'hardskill')
+    const goldHardSkills = hardSkillBadges.filter(badge => badge.classification === 'gold')
+    const silverHardSkills = hardSkillBadges.filter(badge => badge.classification === 'silver')
+    const goldSoftSkills = softSkillBadges.filter(badge => badge.classification === 'gold')
+    const silverSoftSkills = softSkillBadges.filter(badge => badge.classification === 'silver')
+    const specificBadge = nextLevel.specificBadgeId ? nextLevel.specificBadge : undefined
       
+    const specificBadgeProgress = specificBadge && user.badges.findIndex(badge => badge.id === specificBadge.id)
+
     const softSkillsProgress = `${
       softSkillBadges.length}/${nextLevel.softSkillsBadges    
     }`
     const hardSkillsProgress = `${
       hardSkillBadges.length}/${nextLevel.hardSkillsBadges    
     }`
+    const goldHardSkillsProgress = `${
+      goldHardSkills.length}/${nextLevel.goldHardSkills    
+    }`
+    const silverHardSkillsProgress = `${
+      silverHardSkills.length}/${nextLevel.silverHardSkills    
+    }`
+    const goldSoftSkillsProgress = `${
+      goldSoftSkills.length}/${nextLevel.goldSoftSkills    
+    }`
+    const silverSoftSkillsProgress = `${
+      silverSoftSkills.length}/${nextLevel.silverSoftSkills    
+    }`
     const expProgress = `${user.xp}/${nextLevel.xpRequired}`
 
-    const eligibleForLevelUp = softSkillBadges.length >= nextLevel.softSkillsBadges && hardSkillBadges.length >= nextLevel.hardSkillsBadges && user.xp >= nextLevel.xpRequired
+    const eligibleForLevelUp =
+    softSkillBadges.length >= nextLevel.softSkillsBadges &&
+    hardSkillBadges.length >= nextLevel.hardSkillsBadges &&
+    user.xp >= nextLevel.xpRequired &&
+    goldHardSkills.length >= nextLevel.goldHardSkills &&
+    silverHardSkills.length >= nextLevel.silverHardSkills &&
+    goldSoftSkills.length >= nextLevel.goldSoftSkills &&
+    silverSoftSkills.length >= nextLevel.silverSoftSkills
 
-    return {softSkillsProgress, hardSkillsProgress, expProgress, eligibleForLevelUp}
+    return {softSkillsProgress, hardSkillsProgress, expProgress, eligibleForLevelUp, silverHardSkillsProgress, goldHardSkillsProgress, silverSoftSkillsProgress, goldSoftSkillsProgress, specificBadge, specificBadgeProgress}
   }
-
-console.log(data)
 
   return (
       <TableContainer sx={{ position: 'relative', borderRadius: '1rem', overflow: 'unset', boxShadow: '0px 12px 24px 0px #919EAB1F' }}>
@@ -151,7 +185,14 @@ console.log(data)
                     softSkillsProgress,
                     hardSkillsProgress,
                     expProgress,
-                    eligibleForLevelUp} = getProgress(row, nextLevel)
+                    eligibleForLevelUp,
+                    goldHardSkillsProgress,
+                    silverHardSkillsProgress,
+                    goldSoftSkillsProgress,
+                    silverSoftSkillsProgress,
+                    specificBadge,
+                    specificBadgeProgress
+                  } = getProgress(row, nextLevel)
                   return (
                   <TableRow
                     hover
@@ -174,19 +215,51 @@ console.log(data)
                     </TableCell>
                     {!isMobile && 
                     <>                              
-                      <TableCell align="right" sx={{}}>
+                      <TableCell align="right">
                         <Box display='flex' flexDirection='column' alignItems='flex-end' gap='0.5rem'>
                           <Box sx={{display: 'flex', alignItems:'right', gap: '4px'}}>
                             <Typography variant="subtitle2">{`${softSkillsProgress}`} </Typography>
-                            <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Conquistas de SoftSkill</Typography>
+                            <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badges de SoftSkill</Typography>
                           </Box>
                           <Box sx={{display: 'flex', alignItems:'right', gap: '4px'}}>
                             <Typography variant="subtitle2">{hardSkillsProgress} </Typography>
-                            <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Conquistas de HardSkill</Typography>
+                            <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badges de HardSkill</Typography>
                           </Box>
                           <Box sx={{display: 'flex', alignItems:'right', gap: '4px'}}>
                             <Typography variant="subtitle2">{expProgress} </Typography>
                             <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Experiência</Typography>
+                          </Box>
+                          {specificBadge && <Box sx={{display: 'flex', alignItems:'center', gap: '4px',
+                            ...(specificBadgeProgress === -1 && {filter: 'grayscale(50%)',
+                              opacity: 0.5})
+                          }}>
+                          <Stack key={specificBadge.id} direction="row" spacing="1rem">
+                            <Box padding={0} sx={{ borderRadius: '15%', outline: `3px solid 
+                              ${getBorderColor(specificBadge.classification)}`}}>
+                              <Image src={specificBadge.imageUrl || ''} sx={{ width: 24, height: 24, borderRadius: '15%'}} />
+                            </Box>
+                            <Typography variant='subtitle2'>{specificBadge.title}</Typography>            
+                          </Stack>
+                          </Box>}
+                        </Box>
+                      </TableCell>
+                      <TableCell align="right">
+                      <Box display='flex' flexDirection='column' alignItems='flex-end' gap='0.5rem'>
+                          <Box sx={{display: 'flex', alignItems:'right', gap: '4px'}}>
+                            <Typography variant="subtitle2">{`${goldHardSkillsProgress}`} </Typography>
+                            <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badges Ouro de Hard Skills</Typography>
+                          </Box>
+                          <Box sx={{display: 'flex', alignItems:'right', gap: '4px'}}>
+                            <Typography variant="subtitle2">{`${silverHardSkillsProgress}`} </Typography>
+                            <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badges Prata de Hard Skills</Typography>
+                          </Box>
+                          <Box sx={{display: 'flex', alignItems:'right', gap: '4px'}}>
+                            <Typography variant="subtitle2">{`${goldSoftSkillsProgress}`} </Typography>
+                            <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badges Ouro de Soft Skills</Typography>
+                          </Box>
+                          <Box sx={{display: 'flex', alignItems:'right', gap: '4px'}}>
+                            <Typography variant="subtitle2">{`${silverSoftSkillsProgress}`} </Typography>
+                            <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badges Prata de Soft Skills</Typography>
                           </Box>
                         </Box>
                       </TableCell>
@@ -194,7 +267,10 @@ console.log(data)
                         {row.currentLevel ? row.currentLevel.title : 'Atribua um nível para esse usuário'}
                       </TableCell>
                       <TableCell>
-                        {eligibleForLevelUp && <OptionsPopover user={row} />}
+                        <Box sx={{display: 'flex', alignItems: 'center'}}>
+                        <OptionsPopover user={row} />
+                        {eligibleForLevelUp && <ArrowUpward color='primary' onClick={handleLevelUp}/>}
+                        </Box>
                       </TableCell>
                     </>}       
                    

@@ -1,17 +1,17 @@
 import { m } from "framer-motion";
 
-import { Close } from "@mui/icons-material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Box, Stack, MenuItem, IconButton } from "@mui/material";
+import { Stack, MenuItem, IconButton } from "@mui/material";
 
 import { useRouter } from "src/routes/hooks";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
+import { User } from "src/app/contexts/users/types";
+
 import { varHover } from "src/components/animate";
 import { usePopover } from "src/components/custom-popover";
 import CustomPopover from "src/components/custom-popover/custom-popover";
-import { User } from "src/app/contexts/users/types";
 
 const OPTIONS = [
   {
@@ -26,12 +26,6 @@ export default function OptionsPopover({user}: {user:User}) {
 
   const confirmDelete = useBoolean()
 
-  const handleDelete = async () => {
-    // await deleteLevel(level.id)
-    // confirmDelete.onFalse()
-    // popover.onClose()
-  }
-
   const handleClosePopover = () => {
     popover.onClose()
     confirmDelete.onFalse()
@@ -41,11 +35,6 @@ export default function OptionsPopover({user}: {user:User}) {
   const handleLevelUp = () =>{
     router.push(`?level-user-modal=open&user=${user.id}`, undefined)
     handleClosePopover()
-  }
-
-  const handleClickItem = (path: string) => {
-    popover.onClose();
-    router.push(path);
   }
 
   return (
@@ -74,39 +63,7 @@ export default function OptionsPopover({user}: {user:User}) {
             <MenuItem onClick={handleLevelUp}>
               Promover Usuário
             </MenuItem>
-  
-          {confirmDelete.value ? 
-          (<MenuItem
-            sx={{ gap:'0.5rem', display: 'flex', alignItems:'center', flexDirection: 'row' ,fontWeight: 'fontWeightBold', color: 'error.main' }}
-          >   
-              <Box onClick={handleDelete}>
-              Confirmar Exclusão
-              </Box>
-              <Box 
-                display="inline-flex" 
-                alignItems="center" 
-                sx={{
-                  border: '1px solid', 
-                  borderRadius: '5px', 
-                  '&:hover': {
-                    backgroundColor: 'error.lighter'
-                  },
-                  width: '22px'
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  confirmDelete.onFalse()
-                }}
-              >
-              <Close fontSize="small"  />
-            </Box>
-          </MenuItem>) :
-          (<MenuItem onClick={confirmDelete.onTrue}
-            sx={{ fontWeight: 'fontWeightBold', color: 'error.main' }}
-          >
-            Excluir
-          </MenuItem>)
-          }
+
         </Stack>
         
       </CustomPopover>

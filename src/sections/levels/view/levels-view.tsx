@@ -1,20 +1,22 @@
 'use client'
 
-import { Box, Button, IconButton, LinearProgress, Stack, Tab, Table, TableBody, TableCell, TableContainer, TableRow, Tabs, Tooltip, Typography } from "@mui/material";
-import { useRouter } from "next/navigation";
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
-import { emptyRows, getComparator, TableEmptyRows, TableHeadCustom, TableSelectedAction, useTable } from "src/components/table";
-import { useResponsive } from "src/hooks/use-responsive";
-import { useLevelsContext } from "src/hooks/use-levels-context";
-import { useEffect, useState } from "react";
-import { Level, LevelsList } from "src/app/contexts/levels/types";
-import LevelsTable from "../levels-table";
-import LevelFormModal from "../components/level-modal";
+import { useState, useEffect } from "react";
+
 import TabContext from '@mui/lab/TabContext';
 import { TabList, TabPanel } from "@mui/lab";
-import UsersLevelTable from "../users-levels-table";
+import { Box, Tab, Stack, Typography } from "@mui/material";
+
+import { useResponsive } from "src/hooks/use-responsive";
 import { useUsersContext } from "src/hooks/use-users-context";
+import { useLevelsContext } from "src/hooks/use-levels-context";
+
+import { Level } from "src/app/contexts/levels/types";
+
+import { useTable } from "src/components/table";
+
+import LevelsTable from "../levels-table";
+import UsersLevelTable from "../users-levels-table";
+import LevelFormModal from "../components/level-modal";
 import UserLevelModal from "../components/user-level-modal";
 
 type RowDataType = Level

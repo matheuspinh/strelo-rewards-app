@@ -1,18 +1,17 @@
 import { m } from "framer-motion";
 
-import { Close } from "@mui/icons-material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Box, Stack, MenuItem, IconButton } from "@mui/material";
+import { Stack, MenuItem, IconButton } from "@mui/material";
 
 import { useRouter } from "src/routes/hooks";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
+import { Level } from "src/app/contexts/levels/types";
+
 import { varHover } from "src/components/animate";
 import { usePopover } from "src/components/custom-popover";
 import CustomPopover from "src/components/custom-popover/custom-popover";
-import { User } from "src/app/contexts/users/types";
-import { Level } from "src/app/contexts/levels/types";
 
 const OPTIONS = [
   {
@@ -76,7 +75,7 @@ export default function OptionsPopover({level}: {level:Level}) {
               Editar Nível
             </MenuItem>
   
-          {confirmDelete.value ? 
+          {/* {confirmDelete.value ? 
           (<MenuItem
             sx={{ gap:'0.5rem', display: 'flex', alignItems:'center', flexDirection: 'row' ,fontWeight: 'fontWeightBold', color: 'error.main' }}
           >   
@@ -107,7 +106,7 @@ export default function OptionsPopover({level}: {level:Level}) {
           >
             Excluir
           </MenuItem>)
-          }
+          } */}
         </Stack>
         
       </CustomPopover>

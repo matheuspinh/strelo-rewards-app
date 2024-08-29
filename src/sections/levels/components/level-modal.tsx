@@ -1,20 +1,22 @@
 import * as Yup from 'yup'
+import { useEffect } from "react";
 import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Close } from "@mui/icons-material";
-import { Box, Button, Dialog, useTheme, Typography, dialogClasses, MenuItem } from "@mui/material";
+import { Box, Button, Dialog, useTheme, MenuItem, Typography, dialogClasses } from "@mui/material";
 
 import { useBoolean } from "src/hooks/use-boolean";
+import { useLevel } from 'src/hooks/use-level-detail';
 import { useResponsive } from "src/hooks/use-responsive";
+import { useLevelsContext } from 'src/hooks/use-levels-context';
+import { useBadgesContext } from 'src/hooks/use-badges-context';
 
 import { RHFTextField } from "src/components/hook-form";
-import FormProvider from "src/components/hook-form/form-provider";
-import { useLevelsContext } from 'src/hooks/use-levels-context';
 import { RHFSelect } from 'src/components/hook-form/rhf-select';
+import FormProvider from "src/components/hook-form/form-provider";
 
 export default function LevelFormModal() {
   const router = useRouter()
@@ -25,11 +27,13 @@ export default function LevelFormModal() {
   const isMobile = useResponsive('down', 'sm');
   const password = useBoolean();
 
-  const { registerLevel, data } = useLevelsContext();
+  const { registerLevel, data, updateLevel } = useLevelsContext();
+  const { data: level, isLoading } = useLevel(edit!);
+  const { data: badgeData } = useBadgesContext()
 
   // const {data: badgeData, isLoading, isError} = useBadge(edit!);
 
-  const level = [] as any;
+  // const level = [] as any;
 
   const theme = useTheme();
 
@@ -40,38 +44,48 @@ export default function LevelFormModal() {
     xpRequired: Yup.number().required('Quantidade de xp é obrigatório'),
     previousLevelId: Yup.string().optional(),
     // goldReward: Yup.number().optional(),
+    goldHardSkills: Yup.number().optional(),
+    goldSoftSkills: Yup.number().optional(),
+    silverHardSkills: Yup.number().optional(),
+    silverSoftSkills: Yup.number().optional(),
+    specificBadgeId: Yup.string().optional(),
   })
-
 
   const methods = useForm({
     resolver: yupResolver(levelFormSchema),
     values: {
       title: level?.title || '',
-      softSkillsBadges: level?.softSkillsBadges || '',
-      hardSkillsBadges: level?.hardSkillsBadges  || '',
-      xpRequired: level?.xpRequired || '',
+      softSkillsBadges: level?.softSkillsBadges || 0,
+      hardSkillsBadges: level?.hardSkillsBadges  || 0,
+      xpRequired: level?.xpRequired || 0,
       // goldReward: level?.goldReward || null,
-      previousLevelId: level?.previousLevelId || '',
+      previousLevelId: level?.previousLevelId|| '',
+      goldHardSkills: level?.goldHardSkills || 0,
+      goldSoftSkills: level?.goldSoftSkills || 0,
+      silverHardSkills: level?.silverHardSkills || 0,
+      silverSoftSkills: level?.silverSoftSkills || 0,
+      specificBadgeId: level?.specificBadgeId || '',
     }
   })
 
   const { setValue, handleSubmit, reset } = methods;
 
-  const onSubmit = handleSubmit(async(data) => {
-    console.log('click')
-    console.log(data)
+  const onSubmit = handleSubmit(async(formData) => {
     try{
       if(edit){
-        await registerLevel({id: edit, data});
+        await updateLevel({levelId: edit, formData});
         toast.success('Conquista atualizada com sucesso!')
       } else {
-        await registerLevel(data);
+        await registerLevel(formData);
         toast.success('Nível criado com sucesso!')
       }
       router.push('/dashboard/levels/')
       
     } catch (error) {
-      console.log(error)
+      if(edit){
+        toast.error('Erro ao atualizar nível')
+        return
+      }
       toast.error('Erro ao criar nível')
       
     }
@@ -129,7 +143,7 @@ export default function LevelFormModal() {
         },
       }}>
 
-        <Box width="23.4375rem" padding="2rem 1.2rem" overflow='auto' sx={{scrollbarWidth:'none'}}>
+        <Box width="23.4375rem" padding="2rem 1.2rem" overflow='auto' sx={{scrollbarWidth:'none', maxHeight: '80vh'}}>
           <Box display="flex"  marginBottom="3rem" flexDirection="row" alignItems="center" justifyContent="space-between">
             <Typography  variant="h4">{edit ? 'Editar Nível' : 'Novo Nível'}</Typography>
             <Close fontSize="large" onClick={handleClose} />
@@ -140,13 +154,23 @@ export default function LevelFormModal() {
                 <RHFTextField name='title' label='Título'/>
                 <RHFTextField type='number' name='softSkillsBadges' label='Quantidade de conquistas de soft skills'/>
                 <RHFTextField type='number' name='hardSkillsBadges' label='Quantidade de conquistas de hard skills'/>
+                <RHFTextField type='number' name='goldHardSkills' label='Quantidade de conquistas de ouro de hard skills'/>
+                <RHFTextField type='number' name='goldSoftSkills' label='Quantidade de conquistas de ouro de soft skills'/>
+                <RHFTextField type='number' name='silverHardSkills' label='Quantidade de conquistas de prata de hard skills'/>
+                <RHFTextField type='number' name='silverSoftSkills' label='Quantidade de conquistas de prata de soft skills'/>
                 <RHFTextField type='number' name='xpRequired' label='Quantidade de xp'/>
+                <RHFSelect name='specificBadgeId' label='Badge Específica'>
+                  {!isLoading && badgeData?.badges?.map((item: any) => <MenuItem key={item.id} value={item.id}>{item.title}</MenuItem>)}
+                </RHFSelect>
                 <RHFSelect name='previousLevelId' label='Nível Anterior'>
-                  {data?.map((level: any) => {
-                    console.log(level)
-                    if(level.nextLevel.length === 0){
-                      return <MenuItem value={level.id}>{level.title}</MenuItem>
+                  {!isLoading && data?.map((item: any) => {
+                    if(item.nextLevel.length === 0){
+                      return <MenuItem key={item.id} value={item.id}>{item.title}</MenuItem>
                     }
+                    if(edit && level?.previousLevelId === item.id){
+                      return <MenuItem key={item.id} value={item.id}>{item.title}</MenuItem>
+                    }
+                    return null
                   })}
                 </RHFSelect>
                 <Button fullWidth variant="contained" size="large" type='submit'>{edit ? 'Editar Nível': 'Criar Nível'}</Button>

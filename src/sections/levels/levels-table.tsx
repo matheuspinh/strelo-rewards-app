@@ -1,13 +1,21 @@
 'use client'
 
-import { Box, Button, IconButton, LinearProgress, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Tooltip, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+
+import { Box, Stack, Table, Tooltip, TableRow, TableBody, TableCell, IconButton, Typography, TableContainer } from "@mui/material";
+
+import { useResponsive } from "src/hooks/use-responsive";
+
+import { getBorderColor } from "src/utils/getBorderColor";
+
+import { Level, LevelsList } from "src/app/contexts/levels/types";
+
+import Image from 'src/components/image';
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
-import { emptyRows, getComparator, TableEmptyRows, TableHeadCustom, TableSelectedAction, useTable } from "src/components/table";
-import { useResponsive } from "src/hooks/use-responsive";
-import { useEffect, useState } from "react";
-import { Level, LevelsList } from "src/app/contexts/levels/types";
+import { useTable, emptyRows, getComparator, TableEmptyRows, TableHeadCustom, TableSelectedAction } from "src/components/table";
+
 import OptionsPopover from "./components/level-modal-options-popover";
 
 type RowDataType = Level
@@ -23,13 +31,15 @@ export default function LevelsTable({data, isLoading}: {data: LevelsList, isLoad
 
   const TABLE_HEAD = isMobile ? [
     { id: 'level', label: 'Nível', align: 'left' },
-      { id: 'badgePointsRequirements', label: 'Skills Necessárias', align: 'center' },
-      { id: 'xpRequirements', label: 'Exp Necessária', align: 'center' },
+      { id: 'badgePointsRequirements', label: 'Requisitos Gerais', align: 'center' },
+      { id: 'badgeHardRequirements', label: 'Conquistas de Hard Skill', align: 'center' },
+      { id: 'badgeSoftRequirements', label: 'Conquistas de Soft Skill', align: 'center' },
       { id: 'options', label: '', align: 'center' },
     ]:[
       { id: 'level', label: 'Nível', align: 'left' },
-      { id: 'badgePointsRequirements', label: 'Skills Necessárias', align: 'center' },
-      { id: 'xpRequirements', label: 'Exp Necessária', align: 'center' },
+      { id: 'badgePointsRequirements', label: 'Requisitos Gerais', align: 'center' },
+      { id: 'badgeHardRequirements', label: 'Conquistas de Hard Skill', align: 'center' },
+      { id: 'badgeSoftRequirements', label: 'Conquistas de Soft Skill', align: 'center' },
       { id: 'options', label: '', align: 'center' },
   ]
 
@@ -40,8 +50,6 @@ export default function LevelsTable({data, isLoading}: {data: LevelsList, isLoad
       setTableData(data);
     }
   }, [isLoading, data]);
-
-  const completion = (completedCount: number, usersCount: number) => Math.ceil((completedCount/usersCount)*100)
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -101,21 +109,50 @@ export default function LevelsTable({data, isLoading}: {data: LevelsList, isLoad
                     </TableCell>   
                     <TableCell align="center">
                       <Box display='flex' flexDirection='column' alignItems='center' gap='0.5rem'>
-                          <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
-                              <Typography variant="subtitle2">{row.softSkillsBadges} </Typography>
-                              <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Pontos de SoftSkill</Typography>
+                        <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
+                          <Typography variant="subtitle2">{row.xpRequired} </Typography>
+                          <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Exp</Typography>
+                        </Box>
+                          {row.specificBadge && <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
+                          <Stack key={row.specificBadge.id} direction="row" spacing="1rem">
+                            <Box padding={0} sx={{borderRadius: '15%', outline: `3px solid ${getBorderColor(row.specificBadge.classification)}`}}>
+                              <Image src={row.specificBadge.imageUrl || ''} sx={{ width: 24, height: 24, borderRadius: '15%'}} />
                             </Box>
-                            <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
-                              <Typography variant="subtitle2">{row.hardSkillsBadges} </Typography>
-                              <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Pontos de HardSkill</Typography>
-                            </Box>
+                            <Typography variant='body2'>{row.specificBadge.title}</Typography>            
+                          </Stack>
+                          </Box>}
                       </Box>
                     </TableCell>
                     <TableCell align="center">
                       <Box display='flex' flexDirection='column' alignItems='center' gap='0.5rem'>
+                        <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
+                          <Typography variant="subtitle2">{row.goldHardSkills} </Typography>
+                          <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badges Ouro HardSkill</Typography>
+                        </Box>
+                        <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
+                          <Typography variant="subtitle2">{row.silverHardSkills} </Typography>
+                          <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badges Prata HardSkill</Typography>
+                        </Box>
+                        <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
+                          <Typography variant="subtitle2">{row.hardSkillsBadges} </Typography>
+                          <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badges Totais de HardSkill</Typography>
+                        </Box>
+                        
+                      </Box>
+                      </TableCell>
+                      <TableCell align="center">
+                      <Box display='flex' flexDirection='column' alignItems='center' gap='0.5rem'>
                           <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
-                              <Typography variant="subtitle2">{row.xpRequired} </Typography>
-                              <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Exp</Typography>
+                              <Typography variant="subtitle2">{row.goldSoftSkills} </Typography>
+                              <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badges Ouro SoftSkill</Typography>
+                            </Box>
+                            <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
+                              <Typography variant="subtitle2">{row.silverSoftSkills} </Typography>
+                              <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badges Prata SoftSkill</Typography>
+                            </Box>
+                            <Box sx={{display: 'flex', alignItems:'center', gap: '4px'}}>
+                              <Typography variant="subtitle2">{row.softSkillsBadges} </Typography>
+                              <Typography variant="subtitle2" sx={{color:'secondary.main'}}>Badges Totais de SoftSkill</Typography>
                             </Box>
                       </Box>
                       </TableCell>
