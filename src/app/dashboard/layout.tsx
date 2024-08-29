@@ -8,6 +8,7 @@ import { AuthGuard, RoleBasedGuard } from 'src/auth/guard';
 
 import { UsersProvider } from '../contexts/users/users-provider';
 import { BadgesProvider } from '../contexts/badges/badges-provider';
+import { LevelsProvider } from '../contexts/levels/levels-provider';
 import { MissionsProvider } from '../contexts/missions/missions-provider';
 import { PrivilegesProvider } from '../contexts/privileges/privileges-provider';
 
@@ -22,6 +23,7 @@ export default function Layout({ children }: Props) {
     <AuthGuard>
       <RoleBasedGuard>
         <UsersProvider>
+          <LevelsProvider>
           <PrivilegesProvider>
             <MissionsProvider>
               <BadgesProvider>
@@ -43,6 +45,7 @@ export default function Layout({ children }: Props) {
               </BadgesProvider>
             </MissionsProvider>
           </PrivilegesProvider>
+          </LevelsProvider>
         </UsersProvider>
       </RoleBasedGuard>
     </AuthGuard>

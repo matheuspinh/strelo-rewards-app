@@ -42,7 +42,7 @@ function Container({ children }: Props) {
 
       const loginPath = loginPaths[method];
 
-      const href = `${loginPath}?${searchParams}`;
+      const href = `${loginPath}`;
 
       router.replace(href);
     } else {
@@ -53,7 +53,7 @@ function Container({ children }: Props) {
   useEffect(() => {
     check();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [check]);
 
   if (!checked) {
     return null;
