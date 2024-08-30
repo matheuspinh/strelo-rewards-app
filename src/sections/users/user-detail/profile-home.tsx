@@ -232,7 +232,7 @@ export default function ProfileHome({ userInfo }: Props) {
             overflowY: 'auto',
             scrollbarWidth: 'none',}}>
           <CardHeader sx={{height:'4.75rem'}} title="Missões em Andamento"/>
-          {userInfo && ongoingMissions.map((mission) => (
+          {userInfo && ongoingMissions.map((mission:any) => (
             <ProfileMission key={mission.id} mission={mission} />
           ))}
           </Card>
@@ -242,7 +242,7 @@ export default function ProfileHome({ userInfo }: Props) {
             scrollbarWidth: 'none',
           }}>
           <CardHeader sx={{height:'4.75rem'}} title="Missões Concluídas"/>
-          {userInfo && userInfo?.completedMissions.map((mission) => (
+          {userInfo && userInfo?.completedMissions.map((mission:any) => (
             <ProfileMission key={mission.id} mission={mission} />
           ))}
           </Card>
