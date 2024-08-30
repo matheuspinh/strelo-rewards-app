@@ -15,6 +15,7 @@ export type Mission = {
   users: User[]
   badges: Badge[]
   completedBy: User[]
+  category: string
 }
 
 export type MissionsList = {
