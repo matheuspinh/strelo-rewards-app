@@ -73,9 +73,11 @@ export default function MissionViews() {
 
   const TABLE_HEAD = isMobile ? [
       { id: 'mission', label: 'Missão', align: 'left' },
+      { id: 'category', label: 'Categoria', align: 'center' },
       { id: 'id',  label: '', align: 'center' } 
     ]:[
       { id: 'mission', label: 'Missão', align: 'left' },
+      { id: 'category', label: 'Categoria', align: 'center' },
       { id: 'rewards', label: 'Premiação', align: 'center' },
       { id: 'completed', label: 'Completaram', align: 'center' },
       { id: 'id',  label: '', align: 'center' }
@@ -167,6 +169,11 @@ export default function MissionViews() {
                           </Typography>
                         </Box>
                       </Box>       
+                    </TableCell>
+                    <TableCell sx={{padding: '1rem'}} align='center'>
+                      <Typography variant="subtitle2" noWrap>
+                        {row.category}
+                      </Typography>  
                     </TableCell>
                     {!isMobile && 
                     <>                              

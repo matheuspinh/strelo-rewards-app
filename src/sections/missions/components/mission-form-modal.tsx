@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Close } from "@mui/icons-material";
-import { Box, Chip, Avatar, Button, Dialog, useTheme, Typography, dialogClasses } from "@mui/material";
+import { Box, Chip, Avatar, Button, Dialog, useTheme, Typography, dialogClasses, MenuItem } from "@mui/material";
 
 import { useBoolean } from "src/hooks/use-boolean";
 import { useResponsive } from "src/hooks/use-responsive";
@@ -18,7 +18,7 @@ import { useMissionsContext } from "src/hooks/use-missions-context";
 import { RHFTextField } from "src/components/hook-form";
 import { RHFUpload } from "src/components/hook-form/rhf-upload";
 import FormProvider from "src/components/hook-form/form-provider";
-import { RHFMultiSelect } from "src/components/hook-form/rhf-select";
+import { RHFMultiSelect, RHFSelect } from "src/components/hook-form/rhf-select";
 import RHFAutocomplete from "src/components/hook-form/rhf-autocomplete";
 
 export const badgesMock = [
@@ -57,7 +57,8 @@ export default function MissionFormModal() {
     xp: Yup.number().min(1, 'Uma missão deve ter experiência como recompensa').required('Determine a experiência concedida.'),
     gold: Yup.number().min(1, 'Uma missão deve ter ouro como recompensa'),
     badges: Yup.array().optional(),
-    participants: Yup.array().min(1, 'Adicione ao menos um participante.')
+    participants: Yup.array().min(1, 'Adicione ao menos um participante.'),
+    category: Yup.string().required('Selecione uma categoria.')
   })
 
   const methods = useForm({
@@ -69,66 +70,50 @@ export default function MissionFormModal() {
       gold: missionData?.gold || 0,
       badges: missionData?.badges.map(badge => (badge.id)) || [],
       participants: missionData?.users.map(user => ({label: user.username, value: user.id, avatar: user.avatarUrl})) || [],
-      image: missionData?.imageUrl || null
+      image: missionData?.imageUrl || null,
+      category: missionData?.category || ''
     }
   })
 
   const { setValue, handleSubmit, reset } = methods;
 
   const onSubmit = handleSubmit(async(data) => {
-    if(edit){
-      try{   
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('description', data.description);
+    formData.append('xp', data.xp.toString());
+    formData.append('category', data.category);
+    if(data.gold){
+      formData.append('gold', data.gold.toString())
+    }
+    if(data.badges){
+      formData.append('badges', JSON.stringify(data.badges))
+    }
+    if(data.image && data.image instanceof File){
+      formData.append('image', data.image);
+    }
+    try{   
+      if(edit){
         const mappedParticipants = data.participants?.map((user) => user.value)
-        const mappedBadges = data.badges?.map((badge) => badge.value)
-        const formData = new FormData();
-        formData.append('title', data.title);
-        formData.append('description', data.description);
-        formData.append('xp', data.xp.toString());
-        if(data.gold){
-          formData.append('gold', data.gold.toString())
-        }
-        if(data.badges){
-          formData.append('badges', JSON.stringify(data.badges))
-        }
         formData.append('participants', JSON.stringify(mappedParticipants));
-        if(data.image && data.image instanceof File){
-          formData.append('image', data.image);
-        }
         await updateMission({id: edit, formData});
         router.push('/dashboard/missions/')
         toast.success('Missão atualizada com sucesso')
         return
-      } catch (error) {
-        toast.error('Erro ao atualizar missão')
-        return
       }
-    }
-    try{
-      const formData = new FormData();
-      
-      formData.append('title', data.title);
-      formData.append('description', data.description);
-      formData.append('xp', data.xp.toString());
-      if(data.gold){
-        formData.append('gold', data.gold.toString())
-      }
-      if(data.badges){
-        formData.append('badges', JSON.stringify(data.badges?.map((badge) => badge)))
-      }
+
       formData.append('participants', JSON.stringify(data.participants?.map((user) => user.value)));
-
-      if(data.image && data.image instanceof File){
-        formData.append('image', data.image);
-      }
-
       await registerMission(formData);
       router.push('/dashboard/missions/')
       toast.success('Missão criada com sucesso')
-      
+      return
     } catch (error) {
-      toast.error('Erro ao criar missão')
-      console.log(error)
-      
+      if(edit){
+        toast.error('Erro ao atualizar missão')
+        return
+      }
+      toast.error('Erro ao atualizar missão')
+      return
     }
   })
 
@@ -214,6 +199,10 @@ export default function MissionFormModal() {
                     <Typography variant='subtitle2'>Recompensa</Typography>
                     <RHFTextField name='xp' type="number" label='Experiência'/>
                     <RHFTextField name='gold' type="number" label='Ouro'/>
+                    <RHFSelect sx={{width:'100%'}} name='category' label='Categoria'>
+                      <MenuItem value='Soft Skill'>Soft Skill</MenuItem>
+                      <MenuItem value='Hard Skill'>Hard Skill</MenuItem>
+                    </RHFSelect>
                     {!isLoadingBadges && <RHFMultiSelect checkbox sx={{width:'100%'}} name='badges' label='Insignias'
                     options={badgesList.badges.map(badge => ({label: badge.title, value: badge.id}))}/>}
                     <Typography variant='subtitle2'>Participantes</Typography>
