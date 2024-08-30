@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Close } from "@mui/icons-material";
-import { Box, Chip, Avatar, Button, Dialog, useTheme, Typography, dialogClasses, MenuItem } from "@mui/material";
+import { Box, Chip, Avatar, Button, Dialog, useTheme, MenuItem, Typography, dialogClasses } from "@mui/material";
 
 import { useBoolean } from "src/hooks/use-boolean";
 import { useResponsive } from "src/hooks/use-responsive";
@@ -18,8 +18,8 @@ import { useMissionsContext } from "src/hooks/use-missions-context";
 import { RHFTextField } from "src/components/hook-form";
 import { RHFUpload } from "src/components/hook-form/rhf-upload";
 import FormProvider from "src/components/hook-form/form-provider";
-import { RHFMultiSelect, RHFSelect } from "src/components/hook-form/rhf-select";
 import RHFAutocomplete from "src/components/hook-form/rhf-autocomplete";
+import { RHFSelect, RHFMultiSelect } from "src/components/hook-form/rhf-select";
 
 export const badgesMock = [
   { id: '1', name: 'Badge 1'},
@@ -106,14 +106,14 @@ export default function MissionFormModal() {
       await registerMission(formData);
       router.push('/dashboard/missions/')
       toast.success('Missão criada com sucesso')
-      return
+      
     } catch (error) {
       if(edit){
         toast.error('Erro ao atualizar missão')
         return
       }
       toast.error('Erro ao atualizar missão')
-      return
+      
     }
   })
 
